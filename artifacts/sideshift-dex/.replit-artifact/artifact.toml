@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "SideShift DEX"
+description = "A simple direct-to-wallet crypto swap app powered by SideShift.ai, with live quotes, fixed-rate shifts, deposit instructions, and status tracking."
+version = "1.0.0"
+id = "artifacts/sideshift-dex"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 20613
+
+[services.development]
+run = "pnpm --filter @workspace/sideshift-dex run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/sideshift-dex", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/sideshift-dex/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "20613"
+BASE_PATH = "/"

@@ -10,6 +10,8 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: sideshift
+    description: SideShift.ai swap operations
 paths:
   /healthz:
     get:
@@ -24,7 +26,102 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /sideshift/coins:
+    get:
+      operationId: listSideShiftCoins
+      tags: [sideshift]
+      summary: List supported SideShift coins
+      responses:
+        "200":
+          description: Supported coins and networks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SideShiftCoin"
+        "502":
+          $ref: "#/components/responses/UpstreamError"
+  /sideshift/quote:
+    post:
+      operationId: createSideShiftQuote
+      tags: [sideshift]
+      summary: Create a SideShift quote
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SideShiftQuoteInput"
+      responses:
+        "200":
+          description: Quote details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SideShiftQuote"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "502":
+          $ref: "#/components/responses/UpstreamError"
+  /sideshift/shifts/fixed:
+    post:
+      operationId: createSideShiftFixedShift
+      tags: [sideshift]
+      summary: Create a fixed-rate SideShift shift
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SideShiftFixedShiftInput"
+      responses:
+        "201":
+          description: Fixed shift details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SideShiftShift"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "502":
+          $ref: "#/components/responses/UpstreamError"
+  /sideshift/shifts/{shiftId}:
+    get:
+      operationId: getSideShiftShift
+      tags: [sideshift]
+      summary: Get SideShift shift status
+      parameters:
+        - name: shiftId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Shift details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SideShiftShift"
+        "404":
+          description: Shift not found
+        "502":
+          $ref: "#/components/responses/UpstreamError"
 components:
+  responses:
+    BadRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    UpstreamError:
+      description: SideShift.ai API error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
   schemas:
     HealthStatus:
       type: object
@@ -33,4 +130,164 @@ components:
           type: string
       required:
         - status
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        details:
+          type: ["string", "null"]
+      required:
+        - error
+    SideShiftCoin:
+      type: object
+      properties:
+        coin:
+          type: string
+        name:
+          type: string
+        networks:
+          type: array
+          items:
+            type: string
+        networksWithMemo:
+          type: array
+          items:
+            type: string
+        fixedOnly:
+          oneOf:
+            - type: boolean
+            - type: array
+              items:
+                type: string
+        variableOnly:
+          oneOf:
+            - type: boolean
+            - type: array
+              items:
+                type: string
+        tokenDetails:
+          type: object
+          additionalProperties:
+            type: object
+            properties:
+              contractAddress:
+                type: string
+              decimals:
+                type: number
+            required: [contractAddress, decimals]
+      required: [coin, name, networks, networksWithMemo, fixedOnly, variableOnly]
+    SideShiftQuoteInput:
+      type: object
+      properties:
+        depositCoin:
+          type: string
+          minLength: 1
+        depositNetwork:
+          type: string
+          minLength: 1
+        settleCoin:
+          type: string
+          minLength: 1
+        settleNetwork:
+          type: string
+          minLength: 1
+        depositAmount:
+          type: string
+          minLength: 1
+      required: [depositCoin, depositNetwork, settleCoin, settleNetwork, depositAmount]
+    SideShiftQuote:
+      type: object
+      properties:
+        id:
+          type: string
+        depositCoin:
+          type: string
+        depositNetwork:
+          type: string
+        settleCoin:
+          type: string
+        settleNetwork:
+          type: string
+        depositAmount:
+          type: string
+        settleAmount:
+          type: string
+        rate:
+          type: string
+        expiresAt:
+          type: string
+        depositMin:
+          type: string
+        depositMax:
+          type: string
+      required: [id, depositCoin, depositNetwork, settleCoin, settleNetwork, depositAmount, settleAmount, rate, expiresAt]
+    SideShiftFixedShiftInput:
+      type: object
+      properties:
+        quoteId:
+          type: string
+          minLength: 1
+        settleAddress:
+          type: string
+          minLength: 1
+        settleMemo:
+          type: string
+        refundAddress:
+          type: string
+        refundMemo:
+          type: string
+      required: [quoteId, settleAddress]
+    SideShiftShift:
+      type: object
+      properties:
+        id:
+          type: string
+        createdAt:
+          type: string
+        depositCoin:
+          type: string
+        settleCoin:
+          type: string
+        depositNetwork:
+          type: string
+        settleNetwork:
+          type: string
+        depositAddress:
+          type: string
+        depositMemo:
+          type: ["string", "null"]
+        settleAddress:
+          type: string
+        settleMemo:
+          type: ["string", "null"]
+        depositMin:
+          type: string
+        depositMax:
+          type: string
+        type:
+          type: string
+        quoteId:
+          type: ["string", "null"]
+        depositAmount:
+          type: ["string", "null"]
+        settleAmount:
+          type: ["string", "null"]
+        expiresAt:
+          type: string
+        status:
+          type: string
+        averageShiftSeconds:
+          type: ["string", "null"]
+        rate:
+          type: ["string", "null"]
+        depositHash:
+          type: ["string", "null"]
+        settleHash:
+          type: ["string", "null"]
+        updatedAt:
+          type: ["string", "null"]
+        issue:
+          type: ["string", "null"]
+      required: [id, createdAt, depositCoin, settleCoin, depositNetwork, settleNetwork, depositAddress, settleAddress, depositMin, depositMax, type, expiresAt, status]
 
