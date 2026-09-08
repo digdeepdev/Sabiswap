@@ -1,6 +1,6 @@
-# [Project name]
+# SideShift DEX
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+A direct-to-wallet crypto swap app powered by the SideShift.ai REST API.
 
 ## Run & Operate
 
@@ -9,7 +9,7 @@ _Replace the heading above with the project's name, and this line with one sente
 - `pnpm run build` — typecheck + build all packages
 - `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec
 - `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
-- Required env: `DATABASE_URL` — Postgres connection string
+- Required secrets: `SIDESHIFT_SECRET`, `SIDESHIFT_AFFILIATE_ID`
 
 ## Stack
 
@@ -22,15 +22,25 @@ _Replace the heading above with the project's name, and this line with one sente
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `artifacts/sideshift-dex/` — React swap interface and active-shift tracker
+- `artifacts/api-server/src/routes/sideshift.ts` — server-side SideShift proxy routes
+- `artifacts/api-server/src/lib/sideshift.ts` — SideShift API client and credential boundary
+- `lib/api-spec/openapi.yaml` — shared API contract and generated-client source
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- SideShift credentials and affiliate ID are injected only by the API server; the browser never receives them.
+- The server forwards the end user's proxy-provided IP as `x-user-ip`, as required by SideShift for integration-originated requests.
+- The MVP uses fixed-rate shifts: quote first, then create a shift, then poll the shift ID.
+- No app database is needed; SideShift remains the source of truth for order state.
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+- Browse live SideShift-supported assets and networks.
+- Request live fixed-rate quotes.
+- Create a direct-to-wallet shift with a destination address.
+- Copy deposit instructions and track the order until completion.
+- Resume an active order after refreshing the browser.
 
 ## User preferences
 
@@ -38,7 +48,8 @@ _Populate as you build — explicit user instructions worth remembering across s
 
 ## Gotchas
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
+- SideShift requires a real end-user IP for quotes and shift creation. Local preview traffic may not have a public client IP, while published traffic should supply one through the platform proxy.
+- SideShift has no staging API; avoid creating real shifts during automated checks.
 
 ## Pointers
 
