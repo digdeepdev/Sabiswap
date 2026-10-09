@@ -62,6 +62,13 @@ export async function sideShiftRequest<T>(
 
   if (options.body) headers["Content-Type"] = "application/json";
 
+  if (options.method === "POST" && !options.userIp) {
+    throw new SideShiftApiError(
+      "A verified visitor IP is required to create a SideShift quote or shift.",
+      400,
+    );
+  }
+
   if (options.authenticated) {
     headers["x-sideshift-secret"] = getCredentials().secret;
   }

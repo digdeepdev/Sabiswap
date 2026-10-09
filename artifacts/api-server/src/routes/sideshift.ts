@@ -18,26 +18,21 @@ import {
   SideShiftApiError,
   sideShiftRequest,
 } from "../lib/sideshift";
+import { publicUserIp } from "../lib/user-ip";
 
 const router: IRouter = Router();
 
-function getUserIp(req: Request): string | undefined {
-  const headerNames = [
-    "cf-connecting-ip",
-    "true-client-ip",
-    "x-real-ip",
-    "x-forwarded-for",
-    "x-client-ip",
-  ] as const;
-
-  for (const headerName of headerNames) {
-    const header = req.headers[headerName];
-    const value = Array.isArray(header) ? header[0] : header;
-    const ip = value?.split(",")[0]?.trim();
-    if (ip) return ip;
+function getUserIp(req: Request): string {
+  // req.ip applies Express's trust-proxy policy to X-Forwarded-For.
+  // Never prefer arbitrary client-supplied IP headers or fall back to server IP.
+  const ip = publicUserIp(req.ip);
+  if (!ip) {
+    throw new SideShiftApiError(
+      "Your public IP could not be determined. Live swaps require a valid visitor IP forwarded by the app proxy.",
+      400,
+    );
   }
-
-  return (req.ip || req.socket.remoteAddress)?.replace(/^::ffff:/, "");
+  return ip;
 }
 
 function sendSideShiftError(
@@ -145,7 +140,7 @@ router.get("/sideshift/shifts/:shiftId", async (req, res): Promise<void> => {
   try {
     const shift = await sideShiftRequest<unknown>(
       `/shifts/${encodeURIComponent(parsed.data.shiftId)}`,
-      { authenticated: true },
+      { authenticated: true, userIp: getUserIp(req) },
     );
     res.json(GetSideShiftShiftResponse.parse(shift));
   } catch (error) {

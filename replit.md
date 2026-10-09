@@ -30,7 +30,7 @@ A direct-to-wallet crypto swap app powered by the SideShift.ai REST API.
 ## Architecture decisions
 
 - SideShift credentials and affiliate ID are injected only by the API server; the browser never receives them.
-- The server forwards the end user's proxy-provided IP as `x-user-ip`, as required by SideShift for integration-originated requests.
+- The server must forward the actual user's public IP as `x-user-ip`. Use Express's trusted-proxy resolution, never arbitrary client IP headers, placeholder addresses, or the server IP. Fail explicitly if no public visitor IP is available.
 - The MVP uses fixed-rate shifts: quote first, then create a shift, then poll the shift ID.
 - No app database is needed; SideShift remains the source of truth for order state.
 
