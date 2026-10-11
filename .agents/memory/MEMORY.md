@@ -1,0 +1,1 @@
+- [Token claims](token-claims.md) — Claim is for rewards/airdrops; keep it coming soon until a real claim system is supplied.

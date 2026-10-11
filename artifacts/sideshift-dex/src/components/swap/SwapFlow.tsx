@@ -9,6 +9,8 @@ import { useDebounce } from '@/hooks/use-local-storage';
 import { toast } from '@/hooks/use-toast';
 import { RefreshCcw, ArrowDown } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Gift } from 'lucide-react';
 
 interface SwapFlowProps {
   onShiftCreated: (shiftId: string) => void;
@@ -156,14 +158,26 @@ export function SwapFlow({ onShiftCreated }: SwapFlowProps) {
       <div className="absolute -inset-1 bg-gradient-to-r from-primary via-secondary to-primary rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-1000 group-hover:duration-200" />
       
       <Card className="relative w-full border-4 border-foreground shadow-[8px_8px_0px_0px_hsl(var(--foreground))] rounded-xl bg-card overflow-hidden">
-        <div className="bg-foreground text-background px-6 py-4 font-mono font-bold flex justify-between items-center tracking-widest text-lg">
-          <span>SabiSwap</span>
-          <div className="flex gap-2">
+        <Tabs defaultValue="swap">
+        <div className="bg-foreground text-background px-4 sm:px-6 py-4 flex justify-between items-center gap-3">
+          <TabsList aria-label="Swap and rewards" className="h-12 rounded-full bg-background/10 p-1 gap-1">
+            {['Swap', 'Claim'].map((label) => (
+              <TabsTrigger
+                key={label}
+                value={label.toLowerCase()}
+                className="h-10 rounded-full px-5 sm:px-6 font-bold text-base text-background/60 border border-transparent data-[state=active]:border-primary data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-none hover:text-background focus-visible:ring-primary"
+              >
+                {label}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+          <div className="flex gap-2 font-mono">
             <span className="w-3 h-3 rounded-full bg-secondary animate-pulse" />
             <span className="text-xs text-background/70 leading-none self-center">LIVE</span>
           </div>
         </div>
 
+        <TabsContent value="swap" forceMount className="mt-0 data-[state=inactive]:hidden">
         <CardContent className="p-6 space-y-4">
           {/* DEPOSIT SECTION */}
           <div className="space-y-3 bg-muted/40 p-4 rounded-lg border-2 border-foreground/10">
@@ -256,6 +270,25 @@ export function SwapFlow({ onShiftCreated }: SwapFlowProps) {
           </Button>
 
         </CardContent>
+        </TabsContent>
+        <TabsContent value="claim" className="mt-0">
+          <CardContent className="px-6 py-12 text-center flex flex-col items-center gap-5">
+            <div className="rounded-2xl border border-primary/30 bg-primary/10 p-5">
+              <Gift className="h-9 w-9 text-primary-ink" aria-hidden="true" />
+            </div>
+            <span className="rounded-full bg-primary/15 border border-primary/30 px-4 py-1.5 text-xs font-mono font-bold uppercase tracking-wider text-primary-ink">
+              Coming soon
+            </span>
+            <div className="space-y-3">
+              <h2 className="text-2xl font-bold">Rewards &amp; airdrops</h2>
+              <p className="max-w-xs text-sm text-muted-foreground leading-relaxed">
+                Token claims aren’t available yet. Claim details and eligibility will be announced when rewards are ready.
+              </p>
+            </div>
+            <p className="text-xs text-muted-foreground">No wallet connection or transaction is required.</p>
+          </CardContent>
+        </TabsContent>
+        </Tabs>
       </Card>
     </div>
   );
