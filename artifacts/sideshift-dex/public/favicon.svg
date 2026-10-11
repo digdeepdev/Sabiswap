@@ -1,3 +1,20 @@
 <svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
-<rect width="180" height="180" rx="36" fill="#FF3C00"/>
+  <defs>
+    <linearGradient id="tile" x1="16" y1="8" x2="160" y2="180" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#262138"/>
+      <stop offset="1" stop-color="#09080E"/>
+    </linearGradient>
+    <linearGradient id="violet" x1="42" y1="48" x2="138" y2="85" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#B9A2FF"/>
+      <stop offset="1" stop-color="#7842FF"/>
+    </linearGradient>
+    <linearGradient id="green" x1="138" y1="132" x2="42" y2="95" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#9BFFCD"/>
+      <stop offset="1" stop-color="#00DC76"/>
+    </linearGradient>
+  </defs>
+  <rect x="2" y="2" width="176" height="176" rx="44" fill="url(#tile)" stroke="#44385F" stroke-width="3"/>
+  <rect x="12" y="12" width="156" height="156" rx="35" stroke="white" stroke-opacity=".07" stroke-width="2"/>
+  <path d="M45 77V69C45 58 54 49 65 49H131M113 31L132 49L113 67" stroke="url(#violet)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M135 103V111C135 122 126 131 115 131H49M67 113L48 131L67 149" stroke="url(#green)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
