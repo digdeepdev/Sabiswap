@@ -5,6 +5,28 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+export interface MarketCoin {
+  id: string;
+  symbol: string;
+  name: string;
+  image: string;
+  priceUsd: number;
+  /** @nullable */
+  change24h: number | null;
+  /** @nullable */
+  rank: number | null;
+  sparkline: number[];
+  /** @nullable */
+  lastUpdated: string | null;
+}
+
+export interface MarketPrices {
+  coins: MarketCoin[];
+  fetchedAt: string;
+  source: string;
+  stale: boolean;
+}
+
 export interface HealthStatus {
   status: string;
 }

@@ -21,7 +21,9 @@ import type {
 
 import type {
   BadRequestResponse,
+  ErrorResponse,
   HealthStatus,
+  MarketPrices,
   SideShiftCoin,
   SideShiftFixedShiftInput,
   SideShiftQuote,
@@ -56,6 +58,83 @@ const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKe
   }
   return result;
 };
+
+export const getGetMarketPricesUrl = () => {
+
+
+
+
+  return `/api/market/prices`
+}
+
+/**
+ * @summary Top cryptocurrencies by market capitalization
+ */
+export const getMarketPrices = async ( options?: Parameters<typeof customFetch>[1]): Promise<MarketPrices> => {
+
+  return customFetch<MarketPrices>(getGetMarketPricesUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetMarketPricesQueryKey = () => {
+    return [
+    `/api/market/prices`
+    ] as const;
+    }
+
+
+export const getGetMarketPricesQueryOptions = <TData = Awaited<ReturnType<typeof getMarketPrices>>, TError = ErrorType<ErrorResponse>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getMarketPrices>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetMarketPricesQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getMarketPrices>>> = ({ signal }) => getMarketPrices({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getMarketPrices>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetMarketPricesQueryResult = NonNullable<Awaited<ReturnType<typeof getMarketPrices>>>
+export type GetMarketPricesQueryError = ErrorType<ErrorResponse>
+
+
+/**
+ * @summary Top cryptocurrencies by market capitalization
+ */
+
+export function useGetMarketPrices<TData = Awaited<ReturnType<typeof getMarketPrices>>, TError = ErrorType<ErrorResponse>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getMarketPrices>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetMarketPricesQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
 
 export const getHealthCheckUrl = () => {
 

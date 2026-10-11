@@ -9,6 +9,27 @@ import * as zod from 'zod';
 
 
 /**
+ * @summary Top cryptocurrencies by market capitalization
+ */
+export const GetMarketPricesResponse = zod.object({
+  "coins": zod.array(zod.object({
+  "id": zod.string(),
+  "symbol": zod.string(),
+  "name": zod.string(),
+  "image": zod.string(),
+  "priceUsd": zod.number(),
+  "change24h": zod.number().nullable(),
+  "rank": zod.number().nullable(),
+  "sparkline": zod.array(zod.number()),
+  "lastUpdated": zod.string().nullable()
+})),
+  "fetchedAt": zod.string(),
+  "source": zod.string(),
+  "stale": zod.boolean()
+})
+
+
+/**
  * Returns server health status
  * @summary Health check
  */

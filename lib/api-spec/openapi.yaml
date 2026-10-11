@@ -13,6 +13,24 @@ tags:
   - name: sideshift
     description: SideShift.ai swap operations
 paths:
+  /market/prices:
+    get:
+      operationId: getMarketPrices
+      tags: [market]
+      summary: Top cryptocurrencies by market capitalization
+      responses:
+        "200":
+          description: USD prices, 24-hour changes and seven-day price history from CoinGecko
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MarketPrices"
+        "502":
+          description: Market data temporarily unavailable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
   /healthz:
     get:
       operationId: healthCheck
@@ -123,6 +141,44 @@ components:
           schema:
             $ref: "#/components/schemas/ErrorResponse"
   schemas:
+    MarketPrices:
+      type: object
+      required: [coins, fetchedAt, source, stale]
+      properties:
+        coins:
+          type: array
+          items:
+            $ref: "#/components/schemas/MarketCoin"
+        fetchedAt:
+          type: string
+        source:
+          type: string
+        stale:
+          type: boolean
+    MarketCoin:
+      type: object
+      required: [id, symbol, name, image, priceUsd, change24h, rank, sparkline, lastUpdated]
+      properties:
+        id:
+          type: string
+        symbol:
+          type: string
+        name:
+          type: string
+        image:
+          type: string
+        priceUsd:
+          type: number
+        change24h:
+          type: ["number", "null"]
+        rank:
+          type: ["number", "null"]
+        sparkline:
+          type: array
+          items:
+            type: number
+        lastUpdated:
+          type: ["string", "null"]
     HealthStatus:
       type: object
       properties:

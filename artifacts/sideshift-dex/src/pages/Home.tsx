@@ -1,6 +1,7 @@
 import React from 'react';
 import { SwapFlow } from '@/components/swap/SwapFlow';
 import { ActiveShiftTracker } from '@/components/swap/ActiveShiftTracker';
+import { MarketCarousel } from '@/components/market/MarketCarousel';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 
 export default function Home() {
@@ -38,6 +39,10 @@ export default function Home() {
           />
         )}
         
+        <div className="w-full mt-8">
+          <MarketCarousel />
+        </div>
+
         {/* Footer */}
         <div className="mt-12 text-center text-xs font-mono text-muted-foreground uppercase tracking-widest">
           No Accounts. No Custody. 200+ Assets.
