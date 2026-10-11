@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { Header } from '@/components/Header';
+import { Footer } from '@/components/Footer';
 import { SwapFlow } from '@/components/swap/SwapFlow';
 import { ActiveShiftTracker } from '@/components/swap/ActiveShiftTracker';
 import { MarketCarousel } from '@/components/market/MarketCarousel';
@@ -57,13 +58,9 @@ export default function Home() {
         <div id="market" ref={marketRef} tabIndex={-1} className="w-full mt-8 scroll-mt-24 outline-none">
           <MarketCarousel />
         </div>
-
-        {/* Footer */}
-        <div className="mt-12 text-center text-xs font-mono text-muted-foreground uppercase tracking-widest">
-          No Accounts. No Custody. 200+ Assets.
-        </div>
       </div>
     </div>
+    <Footer onSwap={() => goTo(swapRef.current)} />
     </div>
   );
 }
