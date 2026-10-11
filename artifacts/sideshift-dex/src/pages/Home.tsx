@@ -24,6 +24,14 @@ export default function Home() {
     el.focus({ preventScroll: true });
   };
 
+  useEffect(() => {
+    const id = window.location.hash.replace('#', '');
+    if (id !== 'swap' && id !== 'market') return;
+    const t = window.setTimeout(() => goTo(document.getElementById(id)), 50);
+    return () => window.clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div className="min-h-[100dvh] w-full flex flex-col bg-background">
       <Header

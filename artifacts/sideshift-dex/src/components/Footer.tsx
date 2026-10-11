@@ -1,4 +1,5 @@
-import { ArrowUpRight, Download } from 'lucide-react';
+import { Link } from 'wouter';
+import { ArrowUpRight } from 'lucide-react';
 import { SiX } from 'react-icons/si';
 
 const X_URL = 'https://x.com/sabiswap';
@@ -17,6 +18,14 @@ function Ext({ href, children, id }: { href: string; children: React.ReactNode; 
       {children}
       <ArrowUpRight className="h-3.5 w-3.5 opacity-60 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true" />
     </a>
+  );
+}
+
+function Int({ href, id, children }: { href: string; id: string; children: React.ReactNode }) {
+  return (
+    <Link href={href} data-testid={`link-footer-${id}`} className={linkCls}>
+      {children}
+    </Link>
   );
 }
 
@@ -69,6 +78,7 @@ export function Footer({ onSwap }: FooterProps) {
             <h2 className={heading}>Products</h2>
             <ul className="flex flex-col">
               <li>
+                {onSwap ? (
                 <a
                   href="#swap"
                   data-testid="link-footer-swap"
@@ -82,6 +92,9 @@ export function Footer({ onSwap }: FooterProps) {
                 >
                   Swap
                 </a>
+                ) : (
+                  <Int href="/#swap" id="swap">Swap</Int>
+                )}
               </li>
               <li>
                 <span className="block text-xs text-[#9aa58b]">Powered by</span>
@@ -93,14 +106,14 @@ export function Footer({ onSwap }: FooterProps) {
             <h2 className={heading}>About</h2>
             <ul className="flex flex-col">
               <li><Ext href={X_URL} id="docs">Documentation</Ext></li>
-              <li><Ext href={X_URL} id="terms">Terms of service</Ext></li>
+              <li><Int href="/terms" id="terms">Terms of service</Int></li>
             </ul>
           </div>
           <div>
             <h2 className={heading}>Support</h2>
             <ul className="flex flex-col">
-              <li><Ext href={X_URL} id="faq">FAQ</Ext></li>
-              <li><Ext href={X_URL} id="help">Get help</Ext></li>
+              <li><Int href="/faq" id="faq">FAQ</Int></li>
+              <li><Int href="/help" id="help">Get help</Int></li>
             </ul>
           </div>
           <div>
@@ -109,22 +122,14 @@ export function Footer({ onSwap }: FooterProps) {
               <li><Ext href={X_URL} id="blog">Blog</Ext></li>
               <li><Unlinked id="github" /></li>
               <li>
-                <a
-                  href={ICON_URL}
-                  download="sabiswap-icon.png"
-                  data-testid="link-footer-brand-assets"
-                  className={linkCls}
-                >
-                  Brand assets
-                  <Download className="h-3.5 w-3.5 opacity-60" aria-hidden="true" />
-                </a>
+                <Int href="/brand-assets" id="brand-assets">Brand assets</Int>
               </li>
             </ul>
           </div>
         </nav>
 
         <p className="mt-10 border-t border-[#2c3027] pt-5 text-xs text-[#9aa58b]" data-testid="text-footer-note">
-          Documentation, terms, and support links currently lead to our X profile.
+          Documentation and blog links currently lead to our X profile.
         </p>
       </div>
     </footer>
