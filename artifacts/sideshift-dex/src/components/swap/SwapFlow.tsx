@@ -157,7 +157,7 @@ export function SwapFlow({ onShiftCreated }: SwapFlowProps) {
       
       <Card className="relative w-full border-4 border-foreground shadow-[8px_8px_0px_0px_hsl(var(--foreground))] rounded-xl bg-card overflow-hidden">
         <div className="bg-foreground text-background px-6 py-4 font-mono font-bold flex justify-between items-center tracking-widest text-lg">
-          <span>SIDESHIFT_DEX</span>
+          <span>SabiSwap</span>
           <div className="flex gap-2">
             <span className="w-3 h-3 rounded-full bg-secondary animate-pulse" />
             <span className="text-xs text-background/70 leading-none self-center">LIVE</span>

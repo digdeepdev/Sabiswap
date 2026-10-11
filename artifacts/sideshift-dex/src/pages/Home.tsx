@@ -20,7 +20,7 @@ export default function Home() {
         {/* Header */}
         <div className="text-center space-y-3 mb-4">
           <h1 className="text-4xl md:text-6xl font-bold font-mono tracking-tighter text-foreground bg-clip-text">
-            SIDESHIFT<span className="text-primary">.DEX</span>
+            Sabi<span className="text-primary">Swap</span>
           </h1>
           <p className="font-mono text-muted-foreground text-sm md:text-base tracking-widest uppercase">
             Direct-to-Wallet Cross-Chain Swaps

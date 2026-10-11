@@ -1,6 +1,8 @@
-# SideShift DEX
+# SabiSwap
 
 A direct-to-wallet crypto swap app powered by the SideShift.ai REST API.
+
+The user-facing website brand is SabiSwap. SideShift.ai remains the swap API provider.
 
 ## Run & Operate
 
