@@ -1,0 +1,16 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "_NpxaNjMo8F4VS-a2DoJy"
+uri = "file://artifacts/sideshift-dex/public/app-icon.png"
+type = "image"
+title = "SabiSwap App Icon"
+description = "Extracted from your supplied artwork, cropped and centered with a transparent background."
+logical_id = "231ad98a-bb46-40cf-b58e-1a4c32c1fc8c"
+content_hash = "sha256:89899fb39d572b1e2d63fc91ed1cec3be1f1591264a5e539e5ba0fc9bf78bf65"
+size = 62880
+mtime_ms = 1791754506816
+storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:dbd3836e-3b08-44d5-b5ea-4dbafb8b7ff0/231ad98a-bb46-40cf-b58e-1a4c32c1fc8c/d5855bdb-b54c-42d6-9e6e-f4df89ba748c"
+storage_version_token = "1791754621494337"
+content_type = "image/png"

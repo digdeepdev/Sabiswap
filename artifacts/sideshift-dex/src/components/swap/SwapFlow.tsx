@@ -203,8 +203,8 @@ export function SwapFlow({ onShiftCreated }: SwapFlowProps) {
           {/* SETTLE SECTION */}
           <div className="space-y-3 bg-primary/5 p-4 rounded-lg border-2 border-primary/20">
             <div className="flex justify-between items-end">
-              <Label className="font-mono text-primary uppercase text-xs font-bold tracking-wider">You Receive</Label>
-              {isQuoting && <RefreshCcw className="w-3 h-3 text-primary animate-spin" />}
+              <Label className="font-mono text-primary-ink uppercase text-xs font-bold tracking-wider">You Receive</Label>
+              {isQuoting && <RefreshCcw className="w-3 h-3 text-primary-ink animate-spin" />}
             </div>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">

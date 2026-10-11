@@ -42,7 +42,7 @@ export function ActiveShiftTracker({ shiftId, onClear }: ActiveShiftTrackerProps
   if (isLoading || !shift) {
     return (
       <Card className="w-full max-w-[480px] mx-auto p-6 border-4 border-foreground shadow-[8px_8px_0px_0px_hsl(var(--foreground))]">
-        <div className="flex items-center gap-4 text-primary font-mono font-bold animate-pulse mb-6 text-lg">
+        <div className="flex items-center gap-4 text-primary-ink font-mono font-bold animate-pulse mb-6 text-lg">
           <RefreshCcw className="w-5 h-5 animate-spin" />
           LOCATING SHIFT...
         </div>
@@ -80,7 +80,7 @@ export function ActiveShiftTracker({ shiftId, onClear }: ActiveShiftTrackerProps
             <ArrowRight className="w-6 h-6 text-muted-foreground" />
             <div className="flex flex-col items-center">
               <span className="text-sm text-muted-foreground mb-1">RECEIVE</span>
-              <span className="text-primary">{Number(shift.settleAmount || 0).toFixed(4)} <span className="text-sm">{shift.settleCoin.toUpperCase()}</span></span>
+              <span className="text-primary-ink">{Number(shift.settleAmount || 0).toFixed(4)} <span className="text-sm">{shift.settleCoin.toUpperCase()}</span></span>
             </div>
           </div>
 
@@ -123,7 +123,7 @@ export function ActiveShiftTracker({ shiftId, onClear }: ActiveShiftTrackerProps
 
           {isSettled && (
              <div className="bg-secondary/10 p-5 rounded-lg border-2 border-secondary space-y-2 text-center">
-               <CheckCircle2 className="w-12 h-12 text-secondary mx-auto mb-2" />
+               <CheckCircle2 className="w-12 h-12 text-primary-ink mx-auto mb-2" />
                <h3 className="font-bold text-xl text-foreground font-mono">EXCHANGE COMPLETE</h3>
                <p className="text-sm font-mono text-muted-foreground">
                  Funds sent to {shift.settleAddress.substring(0,6)}...{shift.settleAddress.slice(-4)}

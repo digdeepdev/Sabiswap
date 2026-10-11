@@ -24,8 +24,8 @@ function formatTime(iso: string | undefined): string | null {
 
 type Tone = 'up' | 'down' | 'flat';
 const TONE_COLOR: Record<Tone, string> = {
-  up: 'hsl(150 80% 28%)',
-  down: 'hsl(350 85% 48%)',
+  up: 'hsl(var(--gain))',
+  down: 'hsl(var(--loss))',
   flat: 'hsl(var(--muted-foreground))',
 };
 
@@ -200,7 +200,7 @@ export function MarketCarousel() {
             {stale ? 'Stale data' : hasData ? 'Live market' : 'Market'}
           </div>
           <h2 id="market-heading" className="font-mono font-bold text-2xl md:text-3xl tracking-tighter">
-            Market <span className="text-primary">Pulse</span>
+            Market <span className="text-primary-ink">Pulse</span>
           </h2>
         </div>
         <div className="flex gap-2">
