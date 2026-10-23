@@ -266,7 +266,7 @@ export function SwapFlow({ onShiftCreated }: SwapFlowProps) {
             disabled={!quote || createShift.isPending || !settleAddress}
             onClick={handleConfirm}
           >
-            {createShift.isPending ? "CREATING SHIFT..." : "CONFIRM SHIFT"}
+            {createShift.isPending ? "CREATING SHIFT..." : "Confirm Swap"}
           </Button>
 
         </CardContent>
