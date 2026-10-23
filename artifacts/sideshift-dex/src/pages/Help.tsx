@@ -14,8 +14,6 @@ const checklist = ['The coin and network you sent, and the coin and network you 
 export default function Help() {
   return (
     <PageLayout
-      title="Get Help | SabiSwap"
-      description="Troubleshooting for unavailable quotes, delayed transfers, wrong networks or memos and expired orders, plus official SideShift support and SabiSwap on X."
       eyebrow="Support"
       heading="Get help"
       intro="Find the closest match below. Most swap problems come down to the quote, the network or the memo."

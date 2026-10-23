@@ -1,40 +1,16 @@
 import { useEffect } from 'react';
+import { useLocation } from 'wouter';
+import { renderSeoHead } from '@/lib/seo';
 
-const SELECTORS = [
-  'meta[name="description"]',
-  'meta[property="og:title"]',
-  'meta[property="og:description"]',
-  'meta[name="twitter:title"]',
-  'meta[name="twitter:description"]',
-];
-
-let originalTitle: string | null = null;
-const originals = new Map<string, string | null>();
-
-function capture() {
-  if (originalTitle !== null) return;
-  originalTitle = document.title;
-  SELECTORS.forEach((s) => originals.set(s, document.head.querySelector(s)?.getAttribute('content') ?? null));
-}
-
-function setMeta(selector: string, value: string) {
-  document.head.querySelector(selector)?.setAttribute('content', value);
-}
-
-export function usePageMeta(title: string, description: string) {
+// The same metadata is rendered at build time and after client-side navigation.
+export function usePageMeta() {
+  const [path] = useLocation();
   useEffect(() => {
-    capture();
-    document.title = title;
-    setMeta('meta[name="description"]', description);
-    setMeta('meta[property="og:title"]', title);
-    setMeta('meta[property="og:description"]', description);
-    setMeta('meta[name="twitter:title"]', title);
-    setMeta('meta[name="twitter:description"]', description);
-    return () => {
-      if (originalTitle !== null) document.title = originalTitle;
-      originals.forEach((v, s) => {
-        if (v !== null) setMeta(s, v);
-      });
-    };
-  }, [title, description]);
+    document.head.querySelectorAll(
+      'title, meta[name="description"], meta[name="robots"], meta[property^="og:"], meta[name^="twitter:"], link[rel="canonical"], script[type="application/ld+json"]',
+    ).forEach((node) => node.remove());
+    const template = document.createElement('template');
+    template.innerHTML = renderSeoHead(path);
+    document.head.append(template.content);
+  }, [path]);
 }

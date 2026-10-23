@@ -1,6 +1,6 @@
 kind = "web"
 previewPath = "/"
-title = "SideShift DEX"
+title = "SabiSwap"
 description = "A simple direct-to-wallet crypto swap app powered by SideShift.ai, with live quotes, fixed-rate shifts, deposit instructions, and status tracking."
 version = "1.0.0"
 id = "artifacts/sideshift-dex"
@@ -20,8 +20,40 @@ serve = "static"
 publicDir = "artifacts/sideshift-dex/dist/public"
 
 [[services.production.rewrites]]
+from = "/faq"
+to = "/faq/index.html"
+
+[[services.production.rewrites]]
+from = "/faq/"
+to = "/faq/index.html"
+
+[[services.production.rewrites]]
+from = "/help"
+to = "/help/index.html"
+
+[[services.production.rewrites]]
+from = "/help/"
+to = "/help/index.html"
+
+[[services.production.rewrites]]
+from = "/brand-assets"
+to = "/brand-assets/index.html"
+
+[[services.production.rewrites]]
+from = "/brand-assets/"
+to = "/brand-assets/index.html"
+
+[[services.production.rewrites]]
+from = "/terms"
+to = "/terms/index.html"
+
+[[services.production.rewrites]]
+from = "/terms/"
+to = "/terms/index.html"
+
+[[services.production.rewrites]]
 from = "/*"
-to = "/index.html"
+to = "/404.html"
 
 [services.env]
 PORT = "20613"

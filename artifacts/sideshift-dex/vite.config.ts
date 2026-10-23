@@ -4,6 +4,7 @@ import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'vite';
 
 import runtimeErrorOverlay from '@replit/vite-plugin-runtime-error-modal';
+import { renderSeoHead, renderSitemap } from './src/lib/seo';
 
 const rawPort = process.env.PORT;
 
@@ -30,6 +31,25 @@ if (!basePath) {
 export default defineConfig({
   base: basePath,
   plugins: [
+    {
+      name: 'sabiswap-seo',
+      transformIndexHtml: {
+        order: 'pre',
+        handler(html, context) {
+          return html.replace(/<!--seo:start-->[\s\S]*?<!--seo:end-->/, `<!--seo:start-->\n${renderSeoHead(context.originalUrl ?? context.path)}\n<!--seo:end-->`);
+        },
+      },
+      configureServer(server) {
+        server.middlewares.use((request, response, next) => {
+          if (request.url?.split('?')[0] !== `${basePath}sitemap.xml`) return next();
+          response.setHeader('Content-Type', 'application/xml; charset=utf-8');
+          response.end(renderSitemap());
+        });
+      },
+      generateBundle() {
+        this.emitFile({ type: 'asset', fileName: 'sitemap.xml', source: renderSitemap() });
+      },
+    },
     react(),
     tailwindcss(),
     runtimeErrorOverlay(),

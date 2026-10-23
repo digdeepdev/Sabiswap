@@ -40,7 +40,7 @@ export default function Home() {
         onMarket={() => goTo(marketRef.current)}
         onSwap={() => goTo(swapRef.current)}
       />
-    <div className="flex-1 w-full flex flex-col items-center justify-center p-4 py-8 md:py-10 relative overflow-hidden bg-background">
+    <main className="flex-1 w-full flex flex-col items-center justify-center p-4 py-8 md:py-10 relative overflow-hidden bg-background">
       {/* Abstract technical grid background */}
       <div className="absolute inset-0 z-0 opacity-[0.03] pointer-events-none" 
         style={{
@@ -50,6 +50,13 @@ export default function Home() {
       />
       
       <div className="z-10 w-full max-w-4xl flex flex-col items-center gap-8">
+        <div className="max-w-xl text-center">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Cross-chain crypto swaps</h1>
+          <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
+            Swap crypto across blockchains with SabiSwap, powered by SideShift.
+            Choose your assets and networks, review a live quote, and receive crypto in your wallet.
+          </p>
+        </div>
         <div id="swap" ref={swapRef} tabIndex={-1} className="w-full flex flex-col items-center scroll-mt-24 outline-none">
         {activeShiftId ? (
           <ActiveShiftTracker 
@@ -67,7 +74,7 @@ export default function Home() {
           <MarketCarousel />
         </div>
       </div>
-    </div>
+    </main>
     <Footer onSwap={() => goTo(swapRef.current)} />
     </div>
   );

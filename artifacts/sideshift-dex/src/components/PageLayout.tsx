@@ -2,20 +2,16 @@ import { useEffect, type ReactNode } from 'react';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { useLocalStorage } from '@/hooks/use-local-storage';
-import { usePageMeta } from '@/hooks/use-page-meta';
 
 interface PageLayoutProps {
-  title: string;
-  description: string;
   eyebrow: string;
   heading: string;
   intro: ReactNode;
   children: ReactNode;
 }
 
-export function PageLayout({ title, description, eyebrow, heading, intro, children }: PageLayoutProps) {
+export function PageLayout({ eyebrow, heading, intro, children }: PageLayoutProps) {
   const [theme, setTheme] = useLocalStorage<'light' | 'dark'>('sabiswap-theme', 'light');
-  usePageMeta(title, description);
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark');

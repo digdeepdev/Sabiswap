@@ -1,6 +1,5 @@
 import { Link } from 'wouter';
 import { ArrowRight, ChevronDown } from 'lucide-react';
-import * as AccordionPrimitive from '@radix-ui/react-accordion';
 import { PageLayout, cardCls, linkCls } from '@/components/PageLayout';
 
 const items: { q: string; a: React.ReactNode }[] = [
@@ -19,25 +18,21 @@ const items: { q: string; a: React.ReactNode }[] = [
 export default function Faq() {
   return (
     <PageLayout
-      title="FAQ | SabiSwap"
-      description="Answers about how SabiSwap swaps work: networks, addresses and memos, fixed quotes, fees, order tracking and what to do when something goes wrong."
       eyebrow="Support"
       heading="Frequently asked questions"
       intro="Short answers about how swaps work here. For anything unresolved, head to Get Help."
     >
-      <AccordionPrimitive.Root type="single" collapsible className="flex flex-col gap-3" data-testid="accordion-faq">
+      <div className="flex flex-col gap-3" data-testid="accordion-faq">
         {items.map((it, i) => (
-          <AccordionPrimitive.Item key={it.q} value={`q${i}`} className="overflow-hidden rounded-2xl border border-border bg-card" data-testid={`faq-item-${i}`}>
-            <AccordionPrimitive.Header className="m-0">
-              <AccordionPrimitive.Trigger className="group flex w-full items-center justify-between gap-4 px-5 py-4 text-left text-base font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring md:text-lg">
+          <details key={it.q} className="group overflow-hidden rounded-2xl border border-border bg-card" data-testid={`faq-item-${i}`}>
+              <summary className="flex w-full cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 text-left text-base font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring md:text-lg [&::-webkit-details-marker]:hidden">
                 {it.q}
-                <ChevronDown className="h-5 w-5 shrink-0 text-primary-ink transition-transform group-data-[state=open]:rotate-180" aria-hidden="true" />
-              </AccordionPrimitive.Trigger>
-            </AccordionPrimitive.Header>
-            <AccordionPrimitive.Content className="px-5 pb-5 text-[15px] leading-relaxed text-muted-foreground">{it.a}</AccordionPrimitive.Content>
-          </AccordionPrimitive.Item>
+                <ChevronDown className="h-5 w-5 shrink-0 text-primary-ink transition-transform group-open:rotate-180" aria-hidden="true" />
+              </summary>
+            <div className="px-5 pb-5 text-[15px] leading-relaxed text-muted-foreground">{it.a}</div>
+          </details>
         ))}
-      </AccordionPrimitive.Root>
+      </div>
       <div className={`${cardCls} mt-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between`}>
         <div>
           <h2 className="text-lg font-bold">Still stuck?</h2>

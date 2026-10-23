@@ -16,8 +16,6 @@ const pending = ['Operator identity', 'Eligibility and restricted jurisdictions'
 export default function Terms() {
   return (
     <PageLayout
-      title="Terms of Service (Draft) | SabiSwap"
-      description="Draft terms of service for the SabiSwap swap interface. Pending legal review; general information only, not legal advice."
       eyebrow="Legal"
       heading="Terms of service"
       intro="A readable draft of proposed terms for this free swap interface."

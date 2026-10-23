@@ -49,8 +49,6 @@ function Swatch({ n, hex, fg }: { n: string; hex: string; fg: string }) {
 export default function BrandAssets() {
   return (
     <PageLayout
-      title="Brand Assets | SabiSwap"
-      description="Download the SabiSwap app icon, favicons and Apple touch icon, and see the brand colors and usage notes."
       eyebrow="Resources"
       heading="Brand assets"
       intro="The icon files used by this app, each downloadable as-is."
@@ -62,7 +60,7 @@ export default function BrandAssets() {
               {f.file.endsWith('.ico') ? (
                 <p className="font-mono text-xs text-[#c9d2bb]">favicon.ico</p>
               ) : (
-                <img src={`${B}${f.file}`} alt={`${f.t} preview`} className="max-h-24 max-w-24 object-contain" />
+                <img src={`${B}${f.file}`} alt={`SabiSwap ${f.t} preview`} width={96} height={96} loading="lazy" className="max-h-24 max-w-24 object-contain" />
               )}
             </div>
             <h2 className="font-bold">{f.t}</h2>

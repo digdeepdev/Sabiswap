@@ -6,13 +6,20 @@ import Faq from '@/pages/Faq';
 import Terms from '@/pages/Terms';
 import Help from '@/pages/Help';
 import BrandAssets from '@/pages/BrandAssets';
+import { usePageMeta } from '@/hooks/use-page-meta';
 
 const queryClient = new QueryClient();
 
-export default function App() {
+function PageMetadata() {
+  usePageMeta();
+  return null;
+}
+
+export default function App({ ssrPath }: { ssrPath?: string } = {}) {
   return (
     <QueryClientProvider client={queryClient}>
-      <WouterRouter base={import.meta.env.BASE_URL?.replace(/\/$/, '') || ""}>
+      <WouterRouter ssrPath={ssrPath} base={import.meta.env.BASE_URL?.replace(/\/$/, '') || ""}>
+        <PageMetadata />
         <Switch>
           <Route path="/" component={Home} />
           <Route path="/faq" component={Faq} />
