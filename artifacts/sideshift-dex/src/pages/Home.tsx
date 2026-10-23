@@ -50,7 +50,7 @@ export default function Home() {
       />
       
       <div className="z-10 w-full max-w-4xl flex flex-col items-center gap-8">
-        <div className="max-w-xl text-center">
+        <div className="sr-only">
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Cross-chain crypto swaps</h1>
           <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
             Swap crypto across blockchains with SabiSwap, powered by SideShift.
