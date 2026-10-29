@@ -1,3 +1,5 @@
+import { pairPath } from './swap-pair';
+
 // Verified published primary URL; never use a workspace preview URL here.
 export const SITE_URL = 'https://sabiswap.io';
 export const SEO_PAGES = [
@@ -10,6 +12,14 @@ export const SEO_PAGES = [
 
 export function pageSeo(path: string) {
   const clean = path.split(/[?#]/)[0].replace(/\/+$/, '') || '/';
+  const pair = pairPath(clean);
+  if (pair) return {
+    path: clean.toLowerCase(),
+    title: `${pair[0].toUpperCase()} to ${pair[1].toUpperCase()} Crypto Swap | SabiSwap`,
+    description: 'Open this crypto swap pair on SabiSwap. Check asset and network availability, review a live SideShift quote, and swap directly to your wallet.',
+    // Pair links are functional shortcuts, not separately authored SEO landing pages.
+    index: false,
+  };
   return SEO_PAGES.find((page) => page.path === clean) ?? {
     path: clean, title: 'Page Not Found | SabiSwap',
     description: 'This SabiSwap page could not be found. Return to the swap interface or visit our FAQ and help pages.', index: false,
@@ -20,8 +30,10 @@ export function escapeHtml(value: string) {
   return value.replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]!);
 }
 
-export function renderSeoHead(path: string) {
-  const page = pageSeo(path);
+export function renderSeoHead(path: string, pairShell = false) {
+  const page = pairShell
+    ? { ...SEO_PAGES[0], title: 'Crypto Swap Pair | SabiSwap', index: false }
+    : pageSeo(path);
   const url = `${SITE_URL}${page.path}`;
   const image = `${SITE_URL}/social-preview.png`;
   const graph: Record<string, unknown>[] = [{

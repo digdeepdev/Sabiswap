@@ -53,7 +53,7 @@ to = "/terms/index.html"
 
 [[services.production.rewrites]]
 from = "/*"
-to = "/404.html"
+to = "/pair.html"
 
 [services.env]
 PORT = "20613"

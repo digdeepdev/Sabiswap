@@ -29,6 +29,13 @@ try {
     await writeFile(target, html);
     console.log(`Pre-rendered ${route.path}`);
   }
+  // Dynamic pair routes share a noindex loading shell; the client validates the
+  // requested assets against SideShift before showing or quoting the pair.
+  const pairHtml = shell
+    .replace(/<!--seo:start-->[\s\S]*?<!--seo:end-->/, `<!--seo:start-->\n${renderSeoHead('/', true)}\n<!--seo:end-->`)
+    .replace('<div id="root"></div>', () => `<div id="root">${render('/eth/sol')}</div>`);
+  await writeFile(path.join(output, 'pair.html'), pairHtml);
+  console.log('Pre-rendered dynamic pair shell');
 } finally {
   await server.close();
 }

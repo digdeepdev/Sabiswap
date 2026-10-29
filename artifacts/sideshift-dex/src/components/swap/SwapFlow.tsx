@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation, useSearch } from 'wouter';
 import { useListSideShiftCoins, useCreateSideShiftQuote, useCreateSideShiftFixedShift, SideShiftQuote } from '@workspace/api-client-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -8,7 +9,7 @@ import { CoinSelector } from './CoinSelector';
 import { useDebounce } from '@/hooks/use-local-storage';
 import { toast } from '@/hooks/use-toast';
 import { RefreshCcw, ArrowDown, Link as LinkIcon } from 'lucide-react';
-import { readSwapPair, writeSwapPair } from '@/lib/swap-pair';
+import { readSwapPair, writeSwapPair, type SwapPair } from '@/lib/swap-pair';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Gift } from 'lucide-react';
@@ -18,6 +19,8 @@ interface SwapFlowProps {
 }
 
 export function SwapFlow({ onShiftCreated }: SwapFlowProps) {
+  const [location, navigate] = useLocation();
+  const search = useSearch();
   const { data: coins, isLoading: coinsLoading } = useListSideShiftCoins();
   const createQuote = useCreateSideShiftQuote();
   const createShift = useCreateSideShiftFixedShift();
@@ -28,7 +31,6 @@ export function SwapFlow({ onShiftCreated }: SwapFlowProps) {
   const [settleNetwork, setSettleNetwork] = useState<string>('');
   const [depositAmount, setDepositAmount] = useState<string>('0.001');
   const [settleAddress, setSettleAddress] = useState<string>('');
-  const initialized = useRef(false);
   const [pairLinkError, setPairLinkError] = useState<string | null>(null);
   
   const debouncedAmount = useDebounce(depositAmount, 600);
@@ -44,23 +46,40 @@ export function SwapFlow({ onShiftCreated }: SwapFlowProps) {
     return value.data?.error ?? value.message ?? 'Quote unavailable';
   };
 
-  // Initialize with a common pair while preserving the API's exact identifiers.
+  const applyPair = (pair: SwapPair) => {
+    setDepositCoin(pair.depositCoin);
+    setDepositNetwork(pair.depositNetwork);
+    setSettleCoin(pair.settleCoin);
+    setSettleNetwork(pair.settleNetwork);
+    setQuote(null);
+    setQuoteError(null);
+  };
+
+  const updatePair = (pair: SwapPair) => {
+    applyPair(pair);
+    setPairLinkError(null);
+    if (pair.settleCoin !== settleCoin || pair.settleNetwork !== settleNetwork) setSettleAddress('');
+    if (!pair.depositCoin || !pair.depositNetwork || !pair.settleCoin || !pair.settleNetwork) return;
+    const url = writeSwapPair(new URL(window.location.href), pair, coins, import.meta.env.BASE_URL);
+    const relative = url.pathname.slice(import.meta.env.BASE_URL.replace(/\/$/, '').length) + url.search + url.hash;
+    navigate(relative, { replace: true });
+  };
+
+  // Resolve direct visits, legacy links and browser navigation using exact API identifiers.
   useEffect(() => {
-    if (!coins?.length || initialized.current) return;
+    if (!coins?.length) return;
 
     try {
-      const pair = readSwapPair(window.location.search, coins);
+      const pair = readSwapPair(window.location.search, coins, window.location.pathname, import.meta.env.BASE_URL);
       if (pair) {
-        setDepositCoin(pair.depositCoin);
-        setDepositNetwork(pair.depositNetwork);
-        setSettleCoin(pair.settleCoin);
-        setSettleNetwork(pair.settleNetwork);
-        initialized.current = true;
+        applyPair(pair);
+        setSettleAddress('');
+        setPairLinkError(null);
         return;
       }
     } catch (error) {
+      applyPair({ depositCoin: '', depositNetwork: '', settleCoin: '', settleNetwork: '' });
       setPairLinkError(error instanceof Error ? error.message : 'Invalid swap link.');
-      initialized.current = true;
       return;
     }
 
@@ -83,23 +102,12 @@ export function SwapFlow({ onShiftCreated }: SwapFlowProps) {
         ethereum.networks[0] ??
         '',
     );
-    initialized.current = true;
-  }, [coins]);
-
-  // Only pair identifiers go into a shared link, never addresses, amounts or order IDs.
-  useEffect(() => {
-    if (!depositCoin || !depositNetwork || !settleCoin || !settleNetwork) return;
-    const url = writeSwapPair(new URL(window.location.href), {
-      depositCoin, depositNetwork, settleCoin, settleNetwork,
-    });
-    window.history.replaceState(window.history.state, '', url);
-    setPairLinkError(null);
-  }, [depositCoin, depositNetwork, settleCoin, settleNetwork]);
+  }, [coins, location, search]);
 
   const copyPairLink = async () => {
     const url = writeSwapPair(new URL(import.meta.env.BASE_URL, window.location.origin), {
       depositCoin, depositNetwork, settleCoin, settleNetwork,
-    });
+    }, coins, import.meta.env.BASE_URL);
     try {
       await navigator.clipboard.writeText(url.toString());
       toast({ title: 'Pair link copied', description: 'Share it to open these assets and networks.' });
@@ -111,6 +119,7 @@ export function SwapFlow({ onShiftCreated }: SwapFlowProps) {
   // Poll for quote updates dynamically
   useEffect(() => {
     let active = true;
+    setQuote(null);
     if (debouncedAmount && Number(debouncedAmount) > 0 && depositCoin && depositNetwork && settleCoin && settleNetwork) {
       createQuote.mutate({
         data: {
@@ -142,12 +151,10 @@ export function SwapFlow({ onShiftCreated }: SwapFlowProps) {
   }, [debouncedAmount, depositCoin, depositNetwork, settleCoin, settleNetwork]);
 
   const handleSwapCoins = () => {
-    const dc = depositCoin;
-    const dn = depositNetwork;
-    setDepositCoin(settleCoin);
-    setDepositNetwork(settleNetwork);
-    setSettleCoin(dc);
-    setSettleNetwork(dn);
+    updatePair({
+      depositCoin: settleCoin, depositNetwork: settleNetwork,
+      settleCoin: depositCoin, settleNetwork: depositNetwork,
+    });
   };
 
   const handleConfirm = () => {
@@ -249,7 +256,7 @@ export function SwapFlow({ onShiftCreated }: SwapFlowProps) {
                 coins={coins}
                 selectedCoin={depositCoin}
                 selectedNetwork={depositNetwork}
-                onSelect={(c, n) => { setDepositCoin(c); setDepositNetwork(n); }}
+                onSelect={(c, n) => updatePair({ depositCoin: c, depositNetwork: n, settleCoin, settleNetwork })}
               />
             </div>
           </div>
@@ -285,7 +292,7 @@ export function SwapFlow({ onShiftCreated }: SwapFlowProps) {
                 coins={coins}
                 selectedCoin={settleCoin}
                 selectedNetwork={settleNetwork}
-                onSelect={(c, n) => { setSettleCoin(c); setSettleNetwork(n); }}
+                onSelect={(c, n) => updatePair({ depositCoin, depositNetwork, settleCoin: c, settleNetwork: n })}
               />
             </div>
             

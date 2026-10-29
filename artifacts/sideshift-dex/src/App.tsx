@@ -26,6 +26,7 @@ export default function App({ ssrPath }: { ssrPath?: string } = {}) {
           <Route path="/terms" component={Terms} />
           <Route path="/help" component={Help} />
           <Route path="/brand-assets" component={BrandAssets} />
+          <Route path="/:from/:to" component={Home} />
           <Route>
             <div className="flex min-h-screen items-center justify-center">
               <h1 className="text-2xl font-bold">404 - Not Found</h1>
