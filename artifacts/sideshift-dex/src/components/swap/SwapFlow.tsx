@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { CoinSelector } from './CoinSelector';
 import { useDebounce } from '@/hooks/use-local-storage';
 import { toast } from '@/hooks/use-toast';
-import { RefreshCcw, ArrowDown, Link as LinkIcon } from 'lucide-react';
+import { RefreshCcw, ArrowDown } from 'lucide-react';
 import { readSwapPair, writeSwapPair, type SwapPair } from '@/lib/swap-pair';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
@@ -103,18 +103,6 @@ export function SwapFlow({ onShiftCreated }: SwapFlowProps) {
         '',
     );
   }, [coins, location, search]);
-
-  const copyPairLink = async () => {
-    const url = writeSwapPair(new URL(import.meta.env.BASE_URL, window.location.origin), {
-      depositCoin, depositNetwork, settleCoin, settleNetwork,
-    }, coins, import.meta.env.BASE_URL);
-    try {
-      await navigator.clipboard.writeText(url.toString());
-      toast({ title: 'Pair link copied', description: 'Share it to open these assets and networks.' });
-    } catch {
-      toast({ title: 'Could not copy link', description: 'Copy the pair link from your browser’s address bar.', variant: 'destructive' });
-    }
-  };
 
   // Poll for quote updates dynamically
   useEffect(() => {
@@ -226,17 +214,6 @@ export function SwapFlow({ onShiftCreated }: SwapFlowProps) {
 
         <TabsContent value="swap" forceMount className="mt-0 data-[state=inactive]:hidden">
         <CardContent className="p-6 space-y-4">
-          <div className="flex justify-end">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={copyPairLink}
-              disabled={!depositCoin || !depositNetwork || !settleCoin || !settleNetwork}
-            >
-              <LinkIcon className="mr-2 h-4 w-4" aria-hidden="true" />
-              Copy pair link
-            </Button>
-          </div>
           {pairLinkError && <p role="alert" className="text-sm text-destructive">{pairLinkError}</p>}
           {/* DEPOSIT SECTION */}
           <div className="space-y-3 bg-muted/40 p-4 rounded-lg border-2 border-foreground/10">
