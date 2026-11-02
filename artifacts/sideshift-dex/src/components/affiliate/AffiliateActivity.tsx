@@ -50,6 +50,7 @@ export function AffiliateActivity() {
   const stale = !!data && (data.stale || isError);
   const time = when(data?.updatedAt);
   const txs = data?.recentTransactions ?? [];
+  const showVolume = data?.totalVolumeUsd != null && data.totalVolumeUsd >= 1000;
 
   return (
     <section aria-labelledby="affiliate-heading" data-testid="section-affiliate" className="w-full">
@@ -61,9 +62,6 @@ export function AffiliateActivity() {
         <h2 id="affiliate-heading" className="font-mono font-bold text-2xl md:text-3xl tracking-tighter">
           Recent <span className="text-primary-ink">swaps</span>
         </h2>
-        <p className="mt-1 text-sm text-muted-foreground max-w-2xl">
-          Completed swaps attributed to SabiSwap's affiliate account on SideShift. Figures use provider-reported USD values, not estimates from live prices.
-        </p>
       </div>
 
       {stale && (
@@ -74,8 +72,7 @@ export function AffiliateActivity() {
       )}
 
       {isLoading ? (
-        <div aria-busy="true" aria-label="Loading recent swaps" className="grid gap-4 md:grid-cols-[280px_1fr] animate-pulse motion-reduce:animate-none">
-          <div className="h-40 rounded-xl border-2 border-border bg-card" />
+        <div aria-busy="true" aria-label="Loading recent swaps" className="animate-pulse motion-reduce:animate-none">
           <div className="h-64 rounded-xl border-2 border-border bg-card" />
         </div>
       ) : !data ? (
@@ -89,25 +86,21 @@ export function AffiliateActivity() {
           </button>
         </div>
       ) : (
-        <div className="grid gap-4 md:grid-cols-[280px_1fr] items-start">
-          <dl className="rounded-xl border-2 border-foreground bg-card p-5 shadow-[4px_4px_0_0_hsl(var(--primary))] space-y-5">
-            {data.totalVolumeUsd !== null && data.totalVolumeUsd >= 1000 && <div>
+        <div className={`grid gap-4 ${showVolume ? 'md:grid-cols-[280px_1fr]' : ''} items-start`}>
+          {data.totalVolumeUsd !== null && data.totalVolumeUsd >= 1000 && (
+          <dl className="rounded-xl border-2 border-foreground bg-card p-5 shadow-[4px_4px_0_0_hsl(var(--primary))]">
+            <div>
               <dt className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Total all-time volume</dt>
               <dd data-testid="text-affiliate-total" className="font-mono font-bold text-3xl tracking-tight tabular-nums break-words">
                 {usd(data.totalVolumeUsd)}
               </dd>
-            </div>}
-            <div>
-              <dt className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Completed swaps</dt>
-              <dd data-testid="text-affiliate-count" className="font-mono font-bold text-2xl tabular-nums">
-                {data.completedTransactions.toLocaleString('en-US')}
-              </dd>
             </div>
           </dl>
+          )}
 
           <div className="rounded-xl border-2 border-foreground bg-card overflow-hidden">
             <div className="px-4 py-2 border-b-2 border-foreground bg-muted font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-              Latest completed swaps{txs.length ? ` (${txs.length})` : ''}
+              Latest completed swaps
             </div>
             {txs.length === 0 ? (
               <div data-testid="status-affiliate-empty" className="p-8 text-center space-y-1">
