@@ -13,6 +13,18 @@ tags:
   - name: sideshift
     description: SideShift.ai swap operations
 paths:
+  /affiliate/activity:
+    get:
+      operationId: getAffiliateActivity
+      tags: [sideshift]
+      responses:
+        "200":
+          description: Completed swaps attributed to the configured affiliate account, never platform-wide activity
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AffiliateActivity" }
+        "503":
+          description: Affiliate reporting is temporarily unavailable
   /campaign:
     get:
       operationId: getCampaign
@@ -289,6 +301,32 @@ components:
           schema:
             $ref: "#/components/schemas/ErrorResponse"
   schemas:
+    AffiliateTransaction:
+      type: object
+      required: [completedAt, depositCoin, depositNetwork, depositAmount, settleCoin, settleNetwork, settleAmount, volumeUsd]
+      properties:
+        completedAt: { type: string, format: date-time }
+        depositCoin: { type: string }
+        depositNetwork: { type: string }
+        depositAmount: { type: ["string", "null"] }
+        settleCoin: { type: string }
+        settleNetwork: { type: string }
+        settleAmount: { type: ["string", "null"] }
+        volumeUsd: { type: ["number", "null"] }
+    AffiliateActivity:
+      type: object
+      required: [totalVolumeUsd, completedTransactions, recentTransactions, updatedAt, stale]
+      properties:
+        totalVolumeUsd:
+          type: ["number", "null"]
+          description: Sum of provider-reported USD values for all completed affiliate swaps. Null if any historical USD value is missing.
+        completedTransactions: { type: integer, minimum: 0 }
+        recentTransactions:
+          type: array
+          maxItems: 5
+          items: { $ref: "#/components/schemas/AffiliateTransaction" }
+        updatedAt: { type: string, format: date-time }
+        stale: { type: boolean }
     CampaignTier:
       type: object
       required: [rankStart, rankEnd, sharePercent]

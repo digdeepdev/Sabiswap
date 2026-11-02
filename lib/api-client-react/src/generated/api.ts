@@ -20,6 +20,7 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
+  AffiliateActivity,
   BadRequestResponse,
   Campaign,
   CampaignAdminCredentials,
@@ -70,6 +71,77 @@ const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKe
   }
   return result;
 };
+
+export const getGetAffiliateActivityUrl = () => {
+
+
+
+
+  return `/api/affiliate/activity`
+}
+
+export const getAffiliateActivity = async ( options?: Parameters<typeof customFetch>[1]): Promise<AffiliateActivity> => {
+
+  return customFetch<AffiliateActivity>(getGetAffiliateActivityUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetAffiliateActivityQueryKey = () => {
+    return [
+    `/api/affiliate/activity`
+    ] as const;
+    }
+
+
+export const getGetAffiliateActivityQueryOptions = <TData = Awaited<ReturnType<typeof getAffiliateActivity>>, TError = ErrorType<void>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getAffiliateActivity>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetAffiliateActivityQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getAffiliateActivity>>> = ({ signal }) => getAffiliateActivity({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getAffiliateActivity>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetAffiliateActivityQueryResult = NonNullable<Awaited<ReturnType<typeof getAffiliateActivity>>>
+export type GetAffiliateActivityQueryError = ErrorType<void>
+
+
+
+export function useGetAffiliateActivity<TData = Awaited<ReturnType<typeof getAffiliateActivity>>, TError = ErrorType<void>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getAffiliateActivity>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetAffiliateActivityQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
 
 export const getGetCampaignUrl = () => {
 

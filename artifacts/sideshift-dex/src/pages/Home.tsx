@@ -4,6 +4,7 @@ import { Footer } from '@/components/Footer';
 import { SwapFlow } from '@/components/swap/SwapFlow';
 import { ActiveShiftTracker } from '@/components/swap/ActiveShiftTracker';
 import { MarketCarousel } from '@/components/market/MarketCarousel';
+import { AffiliateActivity } from '@/components/affiliate/AffiliateActivity';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 
 export default function Home() {
@@ -72,6 +73,10 @@ export default function Home() {
         
         <div id="market" ref={marketRef} tabIndex={-1} className="w-full mt-8 scroll-mt-24 outline-none">
           <MarketCarousel />
+        </div>
+
+        <div id="affiliate" className="w-full mt-4 scroll-mt-24">
+          <AffiliateActivity />
         </div>
       </div>
     </main>

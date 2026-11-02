@@ -8,7 +8,8 @@
     "build": "node ./build.mjs",
     "start": "node --enable-source-maps ./dist/index.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test:campaign": "node scripts/test-campaign.mjs"
+    "test:campaign": "node scripts/test-campaign.mjs",
+    "test:affiliate": "node scripts/test-affiliate.mjs"
   },
   "dependencies": {
     "@workspace/api-zod": "workspace:*",

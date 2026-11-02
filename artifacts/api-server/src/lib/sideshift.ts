@@ -47,6 +47,33 @@ export function getSideShiftAffiliateId(): string {
   return getCredentials().affiliateId;
 }
 
+/** Read-only reporting API used by SideShift's own affiliate dashboard. */
+export async function sideShiftDashboardRequest<T>(
+  query: string,
+  variables: Record<string, unknown>,
+  userIp: string | undefined,
+  signal: AbortSignal,
+): Promise<T> {
+  const response = await fetch("https://sideshift.ai/graphql", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      "x-sideshift-secret": getCredentials().secret,
+      ...(userIp ? { "x-user-ip": userIp } : {}),
+    },
+    body: JSON.stringify({ query, variables }),
+    signal,
+  });
+  if (!response.ok) throw new SideShiftApiError("Affiliate reporting is unavailable.", response.status);
+  const payload = await response.json() as { data?: T; errors?: unknown[] };
+  if (!payload.data || payload.errors?.length) {
+    // Never expose account details or GraphQL error extensions to public clients.
+    throw new SideShiftApiError("Affiliate reporting is unavailable.", 502);
+  }
+  return payload.data;
+}
+
 export async function sideShiftRequest<T>(
   path: string,
   options: {

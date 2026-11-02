@@ -5,6 +5,34 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+export interface AffiliateTransaction {
+  completedAt: string;
+  depositCoin: string;
+  depositNetwork: string;
+  /** @nullable */
+  depositAmount: string | null;
+  settleCoin: string;
+  settleNetwork: string;
+  /** @nullable */
+  settleAmount: string | null;
+  /** @nullable */
+  volumeUsd: number | null;
+}
+
+export interface AffiliateActivity {
+  /**
+     * Sum of provider-reported USD values for all completed affiliate swaps. Null if any historical USD value is missing.
+     * @nullable
+     */
+  totalVolumeUsd: number | null;
+  /** @minimum 0 */
+  completedTransactions: number;
+  /** @maxItems 5 */
+  recentTransactions: AffiliateTransaction[];
+  updatedAt: string;
+  stale: boolean;
+}
+
 export interface CampaignTier {
   /**
      * @minimum 1

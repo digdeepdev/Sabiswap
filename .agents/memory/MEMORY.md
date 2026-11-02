@@ -2,3 +2,4 @@
 - [Legal draft indexing](legal-draft-indexing.md) — Keep unapproved terms out of search results until finalized.
 - [Pair-link preference](pair-link-preference.md) — User approved clean /<from>/<to> swap links modeled on SideShift.
 - [Swap campaign](swap-campaign.md) — User requested a 100-day volume campaign, community fee rewards and an order-verified leaderboard.
+- [Affiliate reporting](affiliate-reporting.md) — Homepage activity must be affiliate-only and all-time, not campaign entries or SideShift-wide recent shifts.

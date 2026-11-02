@@ -8,6 +8,30 @@
 import * as zod from 'zod';
 
 
+export const getAffiliateActivityResponseCompletedTransactionsMin = 0;
+
+export const getAffiliateActivityResponseRecentTransactionsMax = 5;
+
+
+
+export const GetAffiliateActivityResponse = zod.object({
+  "totalVolumeUsd": zod.number().nullable().describe('Sum of provider-reported USD values for all completed affiliate swaps. Null if any historical USD value is missing.'),
+  "completedTransactions": zod.number().int().min(getAffiliateActivityResponseCompletedTransactionsMin),
+  "recentTransactions": zod.array(zod.object({
+  "completedAt": zod.coerce.date(),
+  "depositCoin": zod.string(),
+  "depositNetwork": zod.string(),
+  "depositAmount": zod.string().nullable(),
+  "settleCoin": zod.string(),
+  "settleNetwork": zod.string(),
+  "settleAmount": zod.string().nullable(),
+  "volumeUsd": zod.number().nullable()
+})).max(getAffiliateActivityResponseRecentTransactionsMax),
+  "updatedAt": zod.coerce.date(),
+  "stale": zod.boolean()
+})
+
+
 export const getCampaignResponsePrizeTiersItemRankStartMax = 100;
 
 export const getCampaignResponsePrizeTiersItemRankEndMax = 100;

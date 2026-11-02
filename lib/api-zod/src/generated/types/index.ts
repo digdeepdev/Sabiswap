@@ -6,6 +6,8 @@
  * OpenAPI spec version: 0.1.0
  */
 
+export * from './affiliateActivity';
+export * from './affiliateTransaction';
 export * from './badRequestResponse';
 export * from './campaign';
 export * from './campaignAdminCredentials';
