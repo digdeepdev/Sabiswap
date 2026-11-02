@@ -59,7 +59,7 @@ export function AffiliateActivity() {
           {stale ? 'Delayed data' : data ? 'Verified activity' : isLoading ? 'Loading activity' : 'Activity unavailable'}
         </div>
         <h2 id="affiliate-heading" className="font-mono font-bold text-2xl md:text-3xl tracking-tighter">
-          SabiSwap <span className="text-primary-ink">Affiliate Activity</span>
+          Recent <span className="text-primary-ink">swaps</span>
         </h2>
         <p className="mt-1 text-sm text-muted-foreground max-w-2xl">
           Completed swaps attributed to SabiSwap's affiliate account on SideShift. Figures use provider-reported USD values, not estimates from live prices.
@@ -74,13 +74,13 @@ export function AffiliateActivity() {
       )}
 
       {isLoading ? (
-        <div aria-busy="true" aria-label="Loading affiliate activity" className="grid gap-4 md:grid-cols-[280px_1fr] animate-pulse motion-reduce:animate-none">
+        <div aria-busy="true" aria-label="Loading recent swaps" className="grid gap-4 md:grid-cols-[280px_1fr] animate-pulse motion-reduce:animate-none">
           <div className="h-40 rounded-xl border-2 border-border bg-card" />
           <div className="h-64 rounded-xl border-2 border-border bg-card" />
         </div>
       ) : !data ? (
         <div role="alert" data-testid="status-affiliate-error" className="rounded-xl border-2 border-dashed border-foreground/40 bg-card p-8 text-center space-y-3">
-          <p className="font-mono font-bold">Affiliate activity could not be loaded.</p>
+          <p className="font-mono font-bold">Recent swaps could not be loaded.</p>
           <p className="text-sm text-muted-foreground">Swaps are not affected. Try again in a moment.</p>
           <button type="button" data-testid="button-affiliate-retry" onClick={() => refetch()} disabled={isFetching}
             className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border-2 border-foreground bg-primary text-primary-foreground font-mono text-sm brutalist-shadow-sm disabled:opacity-60">
@@ -91,14 +91,12 @@ export function AffiliateActivity() {
       ) : (
         <div className="grid gap-4 md:grid-cols-[280px_1fr] items-start">
           <dl className="rounded-xl border-2 border-foreground bg-card p-5 shadow-[4px_4px_0_0_hsl(var(--primary))] space-y-5">
-            <div>
+            {data.totalVolumeUsd !== null && data.totalVolumeUsd >= 1000 && <div>
               <dt className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Total all-time volume</dt>
               <dd data-testid="text-affiliate-total" className="font-mono font-bold text-3xl tracking-tight tabular-nums break-words">
-                {data.totalVolumeUsd === null ? (
-                  <span className="block text-base text-muted-foreground font-medium mt-1">Unavailable: not fully reported by provider</span>
-                ) : usd(data.totalVolumeUsd)}
+                {usd(data.totalVolumeUsd)}
               </dd>
-            </div>
+            </div>}
             <div>
               <dt className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Completed swaps</dt>
               <dd data-testid="text-affiliate-count" className="font-mono font-bold text-2xl tabular-nums">
@@ -113,11 +111,11 @@ export function AffiliateActivity() {
             </div>
             {txs.length === 0 ? (
               <div data-testid="status-affiliate-empty" className="p-8 text-center space-y-1">
-                <p className="font-mono font-bold">No completed affiliate swaps yet.</p>
+                <p className="font-mono font-bold">No completed swaps yet.</p>
                 <p className="text-sm text-muted-foreground">Finished swaps will appear here once SideShift reports them.</p>
               </div>
             ) : (
-              <ol aria-label="Most recent completed affiliate swaps" data-testid="list-affiliate-tx" className="m-0 p-0 list-none">
+              <ol aria-label="Most recent completed swaps" data-testid="list-affiliate-tx" className="m-0 p-0 list-none">
                 {txs.map((tx, i) => <Row key={`${tx.completedAt}-${i}`} tx={tx} i={i} />)}
               </ol>
             )}
