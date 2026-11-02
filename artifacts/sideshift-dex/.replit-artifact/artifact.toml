@@ -52,6 +52,22 @@ from = "/terms/"
 to = "/terms/index.html"
 
 [[services.production.rewrites]]
+from = "/claim"
+to = "/claim/index.html"
+
+[[services.production.rewrites]]
+from = "/claim/"
+to = "/claim/index.html"
+
+[[services.production.rewrites]]
+from = "/campaign-admin"
+to = "/campaign-admin/index.html"
+
+[[services.production.rewrites]]
+from = "/campaign-admin/"
+to = "/campaign-admin/index.html"
+
+[[services.production.rewrites]]
 from = "/*"
 to = "/pair.html"
 

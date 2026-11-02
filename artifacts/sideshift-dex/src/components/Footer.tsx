@@ -114,6 +114,7 @@ export function Footer({ onSwap }: FooterProps) {
             <ul className="flex flex-col">
               <li><Int href="/faq" id="faq">FAQ</Int></li>
               <li><Int href="/help" id="help">Get help</Int></li>
+              <li><Int href="/claim" id="campaign">Community campaign</Int></li>
             </ul>
           </div>
           <div>

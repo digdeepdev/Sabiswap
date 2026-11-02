@@ -5,6 +5,180 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+export interface CampaignTier {
+  /**
+     * @minimum 1
+     * @maximum 100
+     */
+  rankStart: number;
+  /**
+     * @minimum 1
+     * @maximum 100
+     */
+  rankEnd: number;
+  /**
+     * @maximum 100
+     * @exclusiveMinimum 0
+     */
+  sharePercent: number;
+}
+
+export interface CampaignLeader {
+  rank: number;
+  twitterUsername: string;
+  volumeUsd: number;
+  orders: number;
+}
+
+export type CampaignPhase = typeof CampaignPhase[keyof typeof CampaignPhase];
+
+
+export const CampaignPhase = {
+  upcoming: 'upcoming',
+  active: 'active',
+  ended: 'ended',
+} as const;
+
+export interface Campaign {
+  name: string;
+  startsAt: string;
+  endsAt: string;
+  phase: CampaignPhase;
+  targetVolumeUsd: number;
+  minimumSwapUsd: number;
+  verifiedVolumeUsd: number;
+  progressPercent: number;
+  approvedOrders: number;
+  participants: number;
+  /** @nullable */
+  earnedFeesUsd: number | null;
+  /** @nullable */
+  communityRewardsUsd: number | null;
+  /** @nullable */
+  feesUpdatedAt: string | null;
+  rewardSharePercent: number;
+  twitterUrl: string;
+  telegramUrl: string;
+  prizeTiers: CampaignTier[];
+  leaderboard: CampaignLeader[];
+}
+
+export interface CampaignEntryInput {
+  /**
+     * @minLength 8
+     * @maxLength 100
+     */
+  orderId: string;
+  /**
+     * @minLength 1
+     * @maxLength 16
+     */
+  twitterUsername: string;
+  followsTwitter: boolean;
+  joinedTelegram: boolean;
+  consent: boolean;
+}
+
+export type CampaignEntryReceiptStatus = typeof CampaignEntryReceiptStatus[keyof typeof CampaignEntryReceiptStatus];
+
+
+export const CampaignEntryReceiptStatus = {
+  pending: 'pending',
+  approved: 'approved',
+  rejected: 'rejected',
+} as const;
+
+export interface CampaignEntryReceipt {
+  id: number;
+  twitterUsername: string;
+  status: CampaignEntryReceiptStatus;
+  /** @nullable */
+  volumeUsd: number | null;
+  submittedAt: string;
+}
+
+export interface CampaignAdminSession {
+  authenticated: boolean;
+  configured: boolean;
+}
+
+export interface CampaignAdminCredentials {
+  /**
+     * @minLength 1
+     * @maxLength 256
+     */
+  password: string;
+}
+
+export type CampaignAdminEntry = CampaignEntryReceipt & ({
+  orderId: string;
+  /** @nullable */
+  reviewNote: string | null;
+  /** @nullable */
+  evidence: string | null;
+  /** @nullable */
+  reviewedAt: string | null;
+});
+
+export interface CampaignAdminQueue {
+  total: number;
+  entries: CampaignAdminEntry[];
+}
+
+export interface CampaignOrderCheck {
+  providerStatus: string;
+  createdAt: string;
+  /** @nullable */
+  completedAt: string | null;
+  eligibleWindow: boolean;
+  depositCoin: string;
+  depositAmount: string;
+  settleCoin: string;
+}
+
+export type CampaignReviewInputDecision = typeof CampaignReviewInputDecision[keyof typeof CampaignReviewInputDecision];
+
+
+export const CampaignReviewInputDecision = {
+  approved: 'approved',
+  rejected: 'rejected',
+  pending: 'pending',
+} as const;
+
+export interface CampaignReviewInput {
+  decision: CampaignReviewInputDecision;
+  /** @maxLength 30 */
+  volumeUsd: string;
+  /** @maxLength 500 */
+  evidence: string;
+  /** @maxLength 500 */
+  reviewNote: string;
+  verifiedTwitter: boolean;
+  verifiedTelegram: boolean;
+  verifiedOwnership: boolean;
+}
+
+export interface CampaignSettingsInput {
+  /**
+     * @maxLength 30
+     * @nullable
+     */
+  earnedFeesUsd: string | null;
+  /** @maxLength 500 */
+  evidence: string;
+  /** @maxItems 20 */
+  prizeTiers: CampaignTier[];
+}
+
+export interface CampaignSettings {
+  /** @nullable */
+  earnedFeesUsd: number | null;
+  evidence: string;
+  prizeTiers: CampaignTier[];
+  /** @nullable */
+  updatedAt: string | null;
+}
+
 export interface MarketCoin {
   id: string;
   symbol: string;
@@ -90,6 +264,8 @@ export interface SideShiftFixedShiftInput {
 }
 
 export interface SideShiftShift {
+  /** Whether this browser receipt was persisted for campaign entry; only present on creation */
+  campaignTracked?: boolean;
   id: string;
   createdAt: string;
   depositCoin: string;
@@ -136,4 +312,21 @@ export type BadRequestResponse = ErrorResponse;
  * SideShift.ai API error
  */
 export type UpstreamErrorResponse = ErrorResponse;
+
+export type GetCampaignAdminEntriesParams = {
+status?: GetCampaignAdminEntriesStatus;
+/**
+ * @minimum 0
+ */
+offset?: number;
+};
+
+export type GetCampaignAdminEntriesStatus = typeof GetCampaignAdminEntriesStatus[keyof typeof GetCampaignAdminEntriesStatus];
+
+
+export const GetCampaignAdminEntriesStatus = {
+  pending: 'pending',
+  approved: 'approved',
+  rejected: 'rejected',
+} as const;
 

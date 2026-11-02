@@ -6,6 +6,8 @@ import Faq from '@/pages/Faq';
 import Terms from '@/pages/Terms';
 import Help from '@/pages/Help';
 import BrandAssets from '@/pages/BrandAssets';
+import Claim from '@/pages/Claim';
+import CampaignAdmin from '@/pages/CampaignAdmin';
 import { usePageMeta } from '@/hooks/use-page-meta';
 
 const queryClient = new QueryClient();
@@ -26,6 +28,8 @@ export default function App({ ssrPath }: { ssrPath?: string } = {}) {
           <Route path="/terms" component={Terms} />
           <Route path="/help" component={Help} />
           <Route path="/brand-assets" component={BrandAssets} />
+          <Route path="/claim" component={Claim} />
+          <Route path="/campaign-admin" component={CampaignAdmin} />
           <Route path="/:from/:to" component={Home} />
           <Route>
             <div className="flex min-h-screen items-center justify-center">

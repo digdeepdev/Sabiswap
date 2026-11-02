@@ -8,6 +8,8 @@ export const SEO_PAGES = [
   { path: '/help', title: 'Crypto Swap Help & Troubleshooting | SabiSwap Support', description: 'Get help with SabiSwap quotes, delayed transfers, wrong networks and expired orders. Find official SideShift support and learn how to protect your order ID.', index: true },
   { path: '/brand-assets', title: 'SabiSwap Brand Assets — App Icons, Favicons & Colors', description: 'Download SabiSwap app icons, PNG and ICO favicons, and the Apple touch icon. Explore the lime and charcoal brand palette and guidelines for using the logo.', index: true },
   { path: '/terms', title: 'Terms of Service — Draft Pending Review | SabiSwap', description: 'Read the draft terms for the SabiSwap crypto swap interface, including third-party services, transaction risks and security. Pending legal review.', index: false },
+  { path: '/claim', title: '100-Day Swap Campaign & Community Leaderboard | SabiSwap', description: 'Explore SabiSwap’s $100,000 verified swap-volume campaign. View community rewards, qualifying $50 swaps, manual entry review and the approved leaderboard.', index: true },
+  { path: '/campaign-admin', title: 'Campaign Review | SabiSwap', description: 'Private campaign review and fee reconciliation for authorized SabiSwap administrators.', index: false },
 ];
 
 export function pageSeo(path: string) {

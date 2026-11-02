@@ -12,7 +12,7 @@ import { RefreshCcw, ArrowDown } from 'lucide-react';
 import { readSwapPair, writeSwapPair, type SwapPair } from '@/lib/swap-pair';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Gift } from 'lucide-react';
+import { CampaignPreview } from '@/components/campaign/CampaignPreview';
 
 interface SwapFlowProps {
   onShiftCreated: (shiftId: string) => void;
@@ -164,6 +164,12 @@ export function SwapFlow({ onShiftCreated }: SwapFlowProps) {
     }, {
       onSuccess: (shift) => {
         onShiftCreated(shift.id);
+        if (shift.campaignTracked === false) {
+          toast({
+            title: "Swap created, campaign link not registered",
+            description: "Your swap exists and works normally. It could not be registered for the community campaign, so please contact support privately with your order ID.",
+          });
+        }
       },
       onError: (err) => {
         toast({
@@ -308,21 +314,7 @@ export function SwapFlow({ onShiftCreated }: SwapFlowProps) {
         </CardContent>
         </TabsContent>
         <TabsContent value="claim" className="mt-0">
-          <CardContent className="px-6 py-12 text-center flex flex-col items-center gap-5">
-            <div className="rounded-2xl border border-primary/30 bg-primary/10 p-5">
-              <Gift className="h-9 w-9 text-primary-ink" aria-hidden="true" />
-            </div>
-            <span className="rounded-full bg-primary/15 border border-primary/30 px-4 py-1.5 text-xs font-mono font-bold uppercase tracking-wider text-primary-ink">
-              Coming soon
-            </span>
-            <div className="space-y-3">
-              <h2 className="text-2xl font-bold">Rewards &amp; airdrops</h2>
-              <p className="max-w-xs text-sm text-muted-foreground leading-relaxed">
-                Token claims aren’t available yet. Claim details and eligibility will be announced when rewards are ready.
-              </p>
-            </div>
-            <p className="text-xs text-muted-foreground">No wallet connection or transaction is required.</p>
-          </CardContent>
+          <CampaignPreview />
         </TabsContent>
         </Tabs>
       </Card>

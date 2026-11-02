@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 
 const output = new URL('../dist/public/', import.meta.url);
-const routes = ['/', '/faq', '/help', '/brand-assets', '/terms'];
+const routes = ['/', '/faq', '/help', '/brand-assets', '/terms', '/claim', '/campaign-admin'];
 const titles = new Set();
 for (const route of routes) {
   const file = route === '/' ? 'index.html' : `${route.slice(1)}/index.html`;
@@ -19,7 +19,7 @@ for (const route of routes) {
   const schema = head.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)?.[1];
   assert.equal(JSON.parse(schema)['@context'], 'https://schema.org', `Valid schema: ${route}`);
   assert(!head.includes('.replit.dev'), `No development URLs: ${route}`);
-  assert(head.includes(route === '/terms' ? 'noindex, follow' : 'index, follow'), `Robots: ${route}`);
+  assert(head.includes(['/terms', '/campaign-admin'].includes(route) ? 'noindex, follow' : 'index, follow'), `Robots: ${route}`);
   if (route === '/faq') {
     assert.equal((html.match(/<details[\s>]/g) ?? []).length, 10, 'All FAQ entries pre-rendered');
     assert(html.includes('including the memo if one is displayed'), 'FAQ answer readable without JS');
@@ -31,7 +31,8 @@ for (const route of routes) {
 }
 const sitemap = await readFile(new URL('sitemap.xml', output), 'utf8');
 assert(!sitemap.includes('/terms'), 'Draft terms excluded from sitemap');
-assert.equal((sitemap.match(/<loc>/g) ?? []).length, 4, 'All indexable pages in sitemap');
+assert(!sitemap.includes('/campaign-admin'), 'Private admin excluded from sitemap');
+assert.equal((sitemap.match(/<loc>/g) ?? []).length, 5, 'All indexable pages in sitemap');
 const robots = await readFile(new URL('robots.txt', output), 'utf8');
 assert(robots.includes('Sitemap: https://sabiswap.io/sitemap.xml'));
 const notFound = await readFile(new URL('404.html', output), 'utf8');

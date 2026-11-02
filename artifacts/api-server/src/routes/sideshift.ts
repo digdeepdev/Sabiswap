@@ -19,6 +19,7 @@ import {
   sideShiftRequest,
 } from "../lib/sideshift";
 import { publicUserIp } from "../lib/user-ip";
+import { recordCampaignOrder } from "../lib/campaign-security";
 
 const router: IRouter = Router();
 
@@ -124,7 +125,16 @@ router.post("/sideshift/shifts/fixed", async (req, res): Promise<void> => {
         affiliateId: getSideShiftAffiliateId(),
       },
     });
-    res.status(201).json(CreateSideShiftFixedShiftResponse.parse(shift));
+    const result = CreateSideShiftFixedShiftResponse.parse(shift);
+    let campaignTracked = true;
+    try {
+      await recordCampaignOrder(req, res, result.id);
+    } catch {
+      campaignTracked = false;
+      // A campaign persistence problem must never hide an already-created swap.
+      req.log.error("Created swap could not be registered for campaign verification");
+    }
+    res.status(201).json({ ...result, campaignTracked });
   } catch (error) {
     sendSideShiftError(req, res, error);
   }

@@ -13,6 +13,154 @@ tags:
   - name: sideshift
     description: SideShift.ai swap operations
 paths:
+  /campaign:
+    get:
+      operationId: getCampaign
+      tags: [campaign]
+      responses:
+        "200":
+          description: Public verified campaign progress and leaderboard
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Campaign" }
+  /campaign/entries:
+    post:
+      operationId: submitCampaignEntry
+      tags: [campaign]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CampaignEntryInput" }
+      responses:
+        "201":
+          description: Saved for manual review
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CampaignEntryReceipt" }
+  /campaign/entries/mine:
+    get:
+      operationId: getMyCampaignEntries
+      tags: [campaign]
+      responses:
+        "200":
+          description: Entries belonging to this browser
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/CampaignEntryReceipt" }
+  /campaign/admin/session:
+    get:
+      operationId: getCampaignAdminSession
+      tags: [campaign]
+      responses:
+        "200":
+          description: Admin session state
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CampaignAdminSession" }
+  /campaign/admin/login:
+    post:
+      operationId: loginCampaignAdmin
+      tags: [campaign]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CampaignAdminCredentials" }
+      responses:
+        "200":
+          description: HTTP-only session established
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CampaignAdminSession" }
+  /campaign/admin/logout:
+    post:
+      operationId: logoutCampaignAdmin
+      tags: [campaign]
+      responses:
+        "200":
+          description: Session cleared
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CampaignAdminSession" }
+  /campaign/admin/entries:
+    get:
+      operationId: getCampaignAdminEntries
+      tags: [campaign]
+      parameters:
+        - in: query
+          name: status
+          schema: { type: string, enum: [pending, approved, rejected], default: pending }
+        - in: query
+          name: offset
+          schema: { type: integer, minimum: 0, default: 0 }
+      responses:
+        "200":
+          description: Protected paginated review queue
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CampaignAdminQueue" }
+  /campaign/admin/entries/{id}/check:
+    post:
+      operationId: checkCampaignOrder
+      tags: [campaign]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: Live provider status; USD valuation requires manual reconciliation
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CampaignOrderCheck" }
+  /campaign/admin/entries/{id}/review:
+    post:
+      operationId: reviewCampaignEntry
+      tags: [campaign]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CampaignReviewInput" }
+      responses:
+        "200":
+          description: Review saved
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CampaignAdminEntry" }
+  /campaign/admin/settings:
+    get:
+      operationId: getCampaignSettings
+      tags: [campaign]
+      responses:
+        "200":
+          description: Protected fee reconciliation and prize tiers
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CampaignSettings" }
+    put:
+      operationId: updateCampaignSettings
+      tags: [campaign]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CampaignSettingsInput" }
+      responses:
+        "200":
+          description: Settings saved with audit record
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CampaignSettings" }
   /market/prices:
     get:
       operationId: getMarketPrices
@@ -141,6 +289,136 @@ components:
           schema:
             $ref: "#/components/schemas/ErrorResponse"
   schemas:
+    CampaignTier:
+      type: object
+      required: [rankStart, rankEnd, sharePercent]
+      properties:
+        rankStart: { type: integer, minimum: 1, maximum: 100 }
+        rankEnd: { type: integer, minimum: 1, maximum: 100 }
+        sharePercent: { type: number, exclusiveMinimum: 0, maximum: 100 }
+    CampaignLeader:
+      type: object
+      required: [rank, twitterUsername, volumeUsd, orders]
+      properties:
+        rank: { type: integer }
+        twitterUsername: { type: string }
+        volumeUsd: { type: number }
+        orders: { type: integer }
+    Campaign:
+      type: object
+      required: [name, startsAt, endsAt, phase, targetVolumeUsd, minimumSwapUsd, verifiedVolumeUsd, progressPercent, approvedOrders, participants, earnedFeesUsd, communityRewardsUsd, feesUpdatedAt, rewardSharePercent, twitterUrl, telegramUrl, prizeTiers, leaderboard]
+      properties:
+        name: { type: string }
+        startsAt: { type: string, format: date-time }
+        endsAt: { type: string, format: date-time }
+        phase: { type: string, enum: [upcoming, active, ended] }
+        targetVolumeUsd: { type: number }
+        minimumSwapUsd: { type: number }
+        verifiedVolumeUsd: { type: number }
+        progressPercent: { type: number }
+        approvedOrders: { type: integer }
+        participants: { type: integer }
+        earnedFeesUsd: { type: [number, "null"] }
+        communityRewardsUsd: { type: [number, "null"] }
+        feesUpdatedAt: { type: [string, "null"], format: date-time }
+        rewardSharePercent: { type: number }
+        twitterUrl: { type: string }
+        telegramUrl: { type: string }
+        prizeTiers:
+          type: array
+          items: { $ref: "#/components/schemas/CampaignTier" }
+        leaderboard:
+          type: array
+          items: { $ref: "#/components/schemas/CampaignLeader" }
+    CampaignEntryInput:
+      type: object
+      required: [orderId, twitterUsername, followsTwitter, joinedTelegram, consent]
+      properties:
+        orderId: { type: string, minLength: 8, maxLength: 100 }
+        twitterUsername: { type: string, minLength: 1, maxLength: 16 }
+        followsTwitter: { type: boolean }
+        joinedTelegram: { type: boolean }
+        consent: { type: boolean }
+    CampaignEntryReceipt:
+      type: object
+      required: [id, twitterUsername, status, volumeUsd, submittedAt]
+      properties:
+        id: { type: integer }
+        twitterUsername: { type: string }
+        status: { type: string, enum: [pending, approved, rejected] }
+        volumeUsd: { type: [number, "null"] }
+        submittedAt: { type: string, format: date-time }
+    CampaignAdminSession:
+      type: object
+      required: [authenticated, configured]
+      properties:
+        authenticated: { type: boolean }
+        configured: { type: boolean }
+    CampaignAdminCredentials:
+      type: object
+      required: [password]
+      properties:
+        password: { type: string, minLength: 1, maxLength: 256 }
+    CampaignAdminEntry:
+      allOf:
+        - $ref: "#/components/schemas/CampaignEntryReceipt"
+        - type: object
+          required: [orderId, reviewNote, evidence, reviewedAt]
+          properties:
+            orderId: { type: string }
+            reviewNote: { type: [string, "null"] }
+            evidence: { type: [string, "null"] }
+            reviewedAt: { type: [string, "null"], format: date-time }
+    CampaignAdminQueue:
+      type: object
+      required: [entries, total]
+      properties:
+        total: { type: integer }
+        entries:
+          type: array
+          items: { $ref: "#/components/schemas/CampaignAdminEntry" }
+    CampaignOrderCheck:
+      type: object
+      required: [providerStatus, createdAt, completedAt, eligibleWindow, depositCoin, depositAmount, settleCoin]
+      properties:
+        providerStatus: { type: string }
+        createdAt: { type: string }
+        completedAt: { type: [string, "null"] }
+        eligibleWindow: { type: boolean }
+        depositCoin: { type: string }
+        depositAmount: { type: string }
+        settleCoin: { type: string }
+    CampaignReviewInput:
+      type: object
+      required: [decision, volumeUsd, evidence, reviewNote, verifiedTwitter, verifiedTelegram, verifiedOwnership]
+      properties:
+        decision: { type: string, enum: [approved, rejected, pending] }
+        volumeUsd: { type: string, maxLength: 30 }
+        evidence: { type: string, maxLength: 500 }
+        reviewNote: { type: string, maxLength: 500 }
+        verifiedTwitter: { type: boolean }
+        verifiedTelegram: { type: boolean }
+        verifiedOwnership: { type: boolean }
+    CampaignSettingsInput:
+      type: object
+      required: [earnedFeesUsd, evidence, prizeTiers]
+      properties:
+        earnedFeesUsd: { type: [string, "null"], maxLength: 30 }
+        evidence: { type: string, maxLength: 500 }
+        prizeTiers:
+          type: array
+          maxItems: 20
+          items: { $ref: "#/components/schemas/CampaignTier" }
+    CampaignSettings:
+      type: object
+      required: [earnedFeesUsd, evidence, prizeTiers, updatedAt]
+      properties:
+        earnedFeesUsd: { type: [number, "null"] }
+        evidence: { type: string }
+        prizeTiers:
+          type: array
+          items: { $ref: "#/components/schemas/CampaignTier" }
+        updatedAt: { type: [string, "null"], format: date-time }
     MarketPrices:
       type: object
       required: [coins, fetchedAt, source, stale]
@@ -297,6 +575,9 @@ components:
     SideShiftShift:
       type: object
       properties:
+        campaignTracked:
+          type: boolean
+          description: Whether this browser receipt was persisted for campaign entry; only present on creation
         id:
           type: string
         createdAt:

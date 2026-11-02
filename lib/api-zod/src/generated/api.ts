@@ -8,6 +8,252 @@
 import * as zod from 'zod';
 
 
+export const getCampaignResponsePrizeTiersItemRankStartMax = 100;
+
+export const getCampaignResponsePrizeTiersItemRankEndMax = 100;
+
+export const getCampaignResponsePrizeTiersItemSharePercentExclusiveMin = 0;
+export const getCampaignResponsePrizeTiersItemSharePercentMax = 100;
+
+
+
+export const GetCampaignResponse = zod.object({
+  "name": zod.string(),
+  "startsAt": zod.coerce.date(),
+  "endsAt": zod.coerce.date(),
+  "phase": zod.enum(['upcoming', 'active', 'ended']),
+  "targetVolumeUsd": zod.number(),
+  "minimumSwapUsd": zod.number(),
+  "verifiedVolumeUsd": zod.number(),
+  "progressPercent": zod.number(),
+  "approvedOrders": zod.number().int(),
+  "participants": zod.number().int(),
+  "earnedFeesUsd": zod.number().nullable(),
+  "communityRewardsUsd": zod.number().nullable(),
+  "feesUpdatedAt": zod.coerce.date().nullable(),
+  "rewardSharePercent": zod.number(),
+  "twitterUrl": zod.string(),
+  "telegramUrl": zod.string(),
+  "prizeTiers": zod.array(zod.object({
+  "rankStart": zod.number().int().min(1).max(getCampaignResponsePrizeTiersItemRankStartMax),
+  "rankEnd": zod.number().int().min(1).max(getCampaignResponsePrizeTiersItemRankEndMax),
+  "sharePercent": zod.number().gt(getCampaignResponsePrizeTiersItemSharePercentExclusiveMin).max(getCampaignResponsePrizeTiersItemSharePercentMax)
+})),
+  "leaderboard": zod.array(zod.object({
+  "rank": zod.number().int(),
+  "twitterUsername": zod.string(),
+  "volumeUsd": zod.number(),
+  "orders": zod.number().int()
+}))
+})
+
+
+export const submitCampaignEntryBodyOrderIdMin = 8;
+export const submitCampaignEntryBodyOrderIdMax = 100;
+
+export const submitCampaignEntryBodyTwitterUsernameMax = 16;
+
+
+
+export const SubmitCampaignEntryBody = zod.object({
+  "orderId": zod.string().min(submitCampaignEntryBodyOrderIdMin).max(submitCampaignEntryBodyOrderIdMax),
+  "twitterUsername": zod.string().min(1).max(submitCampaignEntryBodyTwitterUsernameMax),
+  "followsTwitter": zod.boolean(),
+  "joinedTelegram": zod.boolean(),
+  "consent": zod.boolean()
+})
+
+export const SubmitCampaignEntryResponse = zod.object({
+  "id": zod.number().int(),
+  "twitterUsername": zod.string(),
+  "status": zod.enum(['pending', 'approved', 'rejected']),
+  "volumeUsd": zod.number().nullable(),
+  "submittedAt": zod.coerce.date()
+})
+
+
+export const GetMyCampaignEntriesResponseItem = zod.object({
+  "id": zod.number().int(),
+  "twitterUsername": zod.string(),
+  "status": zod.enum(['pending', 'approved', 'rejected']),
+  "volumeUsd": zod.number().nullable(),
+  "submittedAt": zod.coerce.date()
+})
+export const GetMyCampaignEntriesResponse = zod.array(GetMyCampaignEntriesResponseItem)
+
+
+export const GetCampaignAdminSessionResponse = zod.object({
+  "authenticated": zod.boolean(),
+  "configured": zod.boolean()
+})
+
+
+export const loginCampaignAdminBodyPasswordMax = 256;
+
+
+
+export const LoginCampaignAdminBody = zod.object({
+  "password": zod.string().min(1).max(loginCampaignAdminBodyPasswordMax)
+})
+
+export const LoginCampaignAdminResponse = zod.object({
+  "authenticated": zod.boolean(),
+  "configured": zod.boolean()
+})
+
+
+export const LogoutCampaignAdminResponse = zod.object({
+  "authenticated": zod.boolean(),
+  "configured": zod.boolean()
+})
+
+
+export const getCampaignAdminEntriesQueryStatusDefault = `pending`;
+export const getCampaignAdminEntriesQueryOffsetDefault = 0;
+export const getCampaignAdminEntriesQueryOffsetMin = 0;
+
+
+
+export const GetCampaignAdminEntriesQueryParams = zod.object({
+  "status": zod.enum(['pending', 'approved', 'rejected']).default(getCampaignAdminEntriesQueryStatusDefault),
+  "offset": zod.coerce.number().int().min(getCampaignAdminEntriesQueryOffsetMin).default(getCampaignAdminEntriesQueryOffsetDefault)
+})
+
+export const GetCampaignAdminEntriesResponse = zod.object({
+  "total": zod.number().int(),
+  "entries": zod.array(zod.object({
+  "id": zod.number().int(),
+  "twitterUsername": zod.string(),
+  "status": zod.enum(['pending', 'approved', 'rejected']),
+  "volumeUsd": zod.number().nullable(),
+  "submittedAt": zod.coerce.date()
+}).and(zod.object({
+  "orderId": zod.string(),
+  "reviewNote": zod.string().nullable(),
+  "evidence": zod.string().nullable(),
+  "reviewedAt": zod.coerce.date().nullable()
+})))
+})
+
+
+export const CheckCampaignOrderParams = zod.object({
+  "id": zod.coerce.number().int()
+})
+
+export const CheckCampaignOrderResponse = zod.object({
+  "providerStatus": zod.string(),
+  "createdAt": zod.string(),
+  "completedAt": zod.string().nullable(),
+  "eligibleWindow": zod.boolean(),
+  "depositCoin": zod.string(),
+  "depositAmount": zod.string(),
+  "settleCoin": zod.string()
+})
+
+
+export const ReviewCampaignEntryParams = zod.object({
+  "id": zod.coerce.number().int()
+})
+
+export const reviewCampaignEntryBodyVolumeUsdMax = 30;
+
+export const reviewCampaignEntryBodyEvidenceMax = 500;
+
+export const reviewCampaignEntryBodyReviewNoteMax = 500;
+
+
+
+export const ReviewCampaignEntryBody = zod.object({
+  "decision": zod.enum(['approved', 'rejected', 'pending']),
+  "volumeUsd": zod.string().max(reviewCampaignEntryBodyVolumeUsdMax),
+  "evidence": zod.string().max(reviewCampaignEntryBodyEvidenceMax),
+  "reviewNote": zod.string().max(reviewCampaignEntryBodyReviewNoteMax),
+  "verifiedTwitter": zod.boolean(),
+  "verifiedTelegram": zod.boolean(),
+  "verifiedOwnership": zod.boolean()
+})
+
+export const ReviewCampaignEntryResponse = zod.object({
+  "id": zod.number().int(),
+  "twitterUsername": zod.string(),
+  "status": zod.enum(['pending', 'approved', 'rejected']),
+  "volumeUsd": zod.number().nullable(),
+  "submittedAt": zod.coerce.date()
+}).and(zod.object({
+  "orderId": zod.string(),
+  "reviewNote": zod.string().nullable(),
+  "evidence": zod.string().nullable(),
+  "reviewedAt": zod.coerce.date().nullable()
+}))
+
+
+export const getCampaignSettingsResponsePrizeTiersItemRankStartMax = 100;
+
+export const getCampaignSettingsResponsePrizeTiersItemRankEndMax = 100;
+
+export const getCampaignSettingsResponsePrizeTiersItemSharePercentExclusiveMin = 0;
+export const getCampaignSettingsResponsePrizeTiersItemSharePercentMax = 100;
+
+
+
+export const GetCampaignSettingsResponse = zod.object({
+  "earnedFeesUsd": zod.number().nullable(),
+  "evidence": zod.string(),
+  "prizeTiers": zod.array(zod.object({
+  "rankStart": zod.number().int().min(1).max(getCampaignSettingsResponsePrizeTiersItemRankStartMax),
+  "rankEnd": zod.number().int().min(1).max(getCampaignSettingsResponsePrizeTiersItemRankEndMax),
+  "sharePercent": zod.number().gt(getCampaignSettingsResponsePrizeTiersItemSharePercentExclusiveMin).max(getCampaignSettingsResponsePrizeTiersItemSharePercentMax)
+})),
+  "updatedAt": zod.coerce.date().nullable()
+})
+
+
+export const updateCampaignSettingsBodyEarnedFeesUsdMax = 30;
+
+export const updateCampaignSettingsBodyEvidenceMax = 500;
+
+export const updateCampaignSettingsBodyPrizeTiersItemRankStartMax = 100;
+
+export const updateCampaignSettingsBodyPrizeTiersItemRankEndMax = 100;
+
+export const updateCampaignSettingsBodyPrizeTiersItemSharePercentExclusiveMin = 0;
+export const updateCampaignSettingsBodyPrizeTiersItemSharePercentMax = 100;
+
+export const updateCampaignSettingsBodyPrizeTiersMax = 20;
+
+
+
+export const UpdateCampaignSettingsBody = zod.object({
+  "earnedFeesUsd": zod.string().max(updateCampaignSettingsBodyEarnedFeesUsdMax).nullable(),
+  "evidence": zod.string().max(updateCampaignSettingsBodyEvidenceMax),
+  "prizeTiers": zod.array(zod.object({
+  "rankStart": zod.number().int().min(1).max(updateCampaignSettingsBodyPrizeTiersItemRankStartMax),
+  "rankEnd": zod.number().int().min(1).max(updateCampaignSettingsBodyPrizeTiersItemRankEndMax),
+  "sharePercent": zod.number().gt(updateCampaignSettingsBodyPrizeTiersItemSharePercentExclusiveMin).max(updateCampaignSettingsBodyPrizeTiersItemSharePercentMax)
+})).max(updateCampaignSettingsBodyPrizeTiersMax)
+})
+
+export const updateCampaignSettingsResponsePrizeTiersItemRankStartMax = 100;
+
+export const updateCampaignSettingsResponsePrizeTiersItemRankEndMax = 100;
+
+export const updateCampaignSettingsResponsePrizeTiersItemSharePercentExclusiveMin = 0;
+export const updateCampaignSettingsResponsePrizeTiersItemSharePercentMax = 100;
+
+
+
+export const UpdateCampaignSettingsResponse = zod.object({
+  "earnedFeesUsd": zod.number().nullable(),
+  "evidence": zod.string(),
+  "prizeTiers": zod.array(zod.object({
+  "rankStart": zod.number().int().min(1).max(updateCampaignSettingsResponsePrizeTiersItemRankStartMax),
+  "rankEnd": zod.number().int().min(1).max(updateCampaignSettingsResponsePrizeTiersItemRankEndMax),
+  "sharePercent": zod.number().gt(updateCampaignSettingsResponsePrizeTiersItemSharePercentExclusiveMin).max(updateCampaignSettingsResponsePrizeTiersItemSharePercentMax)
+})),
+  "updatedAt": zod.coerce.date().nullable()
+})
+
+
 /**
  * @summary Top cryptocurrencies by market capitalization
  */
@@ -105,6 +351,7 @@ export const CreateSideShiftFixedShiftBody = zod.object({
 })
 
 export const CreateSideShiftFixedShiftResponse = zod.object({
+  "campaignTracked": zod.boolean().optional().describe('Whether this browser receipt was persisted for campaign entry; only present on creation'),
   "id": zod.string(),
   "createdAt": zod.string(),
   "depositCoin": zod.string(),
@@ -140,6 +387,7 @@ export const GetSideShiftShiftParams = zod.object({
 })
 
 export const GetSideShiftShiftResponse = zod.object({
+  "campaignTracked": zod.boolean().optional().describe('Whether this browser receipt was persisted for campaign entry; only present on creation'),
   "id": zod.string(),
   "createdAt": zod.string(),
   "depositCoin": zod.string(),

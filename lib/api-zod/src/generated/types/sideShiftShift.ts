@@ -7,6 +7,8 @@
  */
 
 export interface SideShiftShift {
+  /** Whether this browser receipt was persisted for campaign entry; only present on creation */
+  campaignTracked?: boolean;
   id: string;
   createdAt: string;
   depositCoin: string;
