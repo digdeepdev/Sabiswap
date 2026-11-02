@@ -1,3 +1,4 @@
-- [Token claims](token-claims.md) — Claim is for rewards/airdrops; keep it coming soon until a real claim system is supplied.
+- [Token claims](token-claims.md) — Claim hosts community rewards; campaign participation is separate from enabling real payouts.
 - [Legal draft indexing](legal-draft-indexing.md) — Keep unapproved terms out of search results until finalized.
 - [Pair-link preference](pair-link-preference.md) — User approved clean /<from>/<to> swap links modeled on SideShift.
+- [Swap campaign](swap-campaign.md) — User requested a 100-day volume campaign, community fee rewards and an order-verified leaderboard.
