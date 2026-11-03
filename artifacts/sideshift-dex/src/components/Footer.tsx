@@ -4,6 +4,7 @@ import { SiCoinmarketcap, SiGithub, SiX } from 'react-icons/si';
 
 const X_URL = 'https://x.com/sabiswap';
 const GITHUB_URL = 'https://github.com/digdeepdev/Sabiswap';
+const DOCS_URL = `${GITHUB_URL}/blob/main/docs/README.md`;
 const CMC_URL = 'https://coinmarketcap.com/community/profile/SabiSwap';
 const ICON_URL = `${import.meta.env.BASE_URL}app-icon.png`;
 
@@ -111,7 +112,7 @@ export function Footer({ onSwap }: FooterProps) {
           <div>
             <h2 className={heading}>About</h2>
             <ul className="flex flex-col">
-              <li><Ext href={X_URL} id="docs">Documentation</Ext></li>
+              <li><Ext href={DOCS_URL} id="docs">Documentation</Ext></li>
               <li><Int href="/terms" id="terms">Terms of service</Int></li>
             </ul>
           </div>
@@ -136,7 +137,7 @@ export function Footer({ onSwap }: FooterProps) {
         </nav>
 
         <p className="mt-10 border-t border-[#2c3027] pt-5 text-xs text-[#9aa58b]" data-testid="text-footer-note">
-          Documentation and blog links currently lead to our X profile.
+          Documentation is available on GitHub. Blog updates are shared on our X profile.
         </p>
       </div>
     </footer>
