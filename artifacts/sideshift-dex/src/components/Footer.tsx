@@ -1,8 +1,9 @@
 import { Link } from 'wouter';
 import { ArrowUpRight } from 'lucide-react';
-import { SiX } from 'react-icons/si';
+import { SiGithub, SiX } from 'react-icons/si';
 
 const X_URL = 'https://x.com/sabiswap';
+const GITHUB_URL = 'https://github.com/digdeepdev/Sabiswap';
 const ICON_URL = `${import.meta.env.BASE_URL}app-icon.png`;
 
 interface FooterProps {
@@ -26,15 +27,6 @@ function Int({ href, id, children }: { href: string; id: string; children: React
     <Link href={href} data-testid={`link-footer-${id}`} className={linkCls}>
       {children}
     </Link>
-  );
-}
-
-function Unlinked({ id }: { id: string }) {
-  return (
-    <span data-testid={`text-footer-${id}`} className="inline-flex items-center gap-2 py-1 text-sm text-[#9aa58b]">
-      GitHub
-      <span className="rounded-full border border-[#3a4030] px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider">Not linked yet</span>
-    </span>
   );
 }
 
@@ -62,14 +54,16 @@ export function Footer({ onSwap }: FooterProps) {
             >
               <SiX className="h-4 w-4" aria-hidden="true" />
             </a>
-            <span
-              role="img"
-              aria-label="GitHub: not linked yet"
-              data-testid="text-footer-social-github"
-              className="inline-flex h-11 items-center rounded-2xl border border-dashed border-[#3a4030] px-3 font-mono text-[11px] uppercase tracking-wider text-[#9aa58b]"
+            <a
+              href={GITHUB_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="SabiSwap on GitHub (opens in a new tab)"
+              data-testid="link-footer-social-github"
+              className="grid h-11 w-11 place-items-center rounded-2xl bg-[#10110e] text-[#b7e35a] shadow-[0_2px_0_#2c3027] transition hover:bg-[#242820] hover:text-[#d2f58a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b7e35a] focus-visible:ring-offset-2 focus-visible:ring-offset-[#1b1d19]"
             >
-              GitHub · Not linked yet
-            </span>
+              <SiGithub className="h-4 w-4" aria-hidden="true" />
+            </a>
           </div>
         </div>
 
@@ -121,7 +115,7 @@ export function Footer({ onSwap }: FooterProps) {
             <h2 className={heading}>Resources</h2>
             <ul className="flex flex-col">
               <li><Ext href={X_URL} id="blog">Blog</Ext></li>
-              <li><Unlinked id="github" /></li>
+              <li><Ext href={GITHUB_URL} id="github">GitHub</Ext></li>
               <li>
                 <Int href="/brand-assets" id="brand-assets">Brand assets</Int>
               </li>
