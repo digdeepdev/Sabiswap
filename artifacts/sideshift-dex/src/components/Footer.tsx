@@ -1,9 +1,10 @@
 import { Link } from 'wouter';
 import { ArrowUpRight } from 'lucide-react';
-import { SiGithub, SiX } from 'react-icons/si';
+import { SiCoinmarketcap, SiGithub, SiX } from 'react-icons/si';
 
 const X_URL = 'https://x.com/sabiswap';
 const GITHUB_URL = 'https://github.com/digdeepdev/Sabiswap';
+const CMC_URL = 'https://coinmarketcap.com/community/profile/SabiSwap';
 const ICON_URL = `${import.meta.env.BASE_URL}app-icon.png`;
 
 interface FooterProps {
@@ -63,6 +64,17 @@ export function Footer({ onSwap }: FooterProps) {
               className="grid h-11 w-11 place-items-center rounded-2xl bg-[#10110e] text-[#b7e35a] shadow-[0_2px_0_#2c3027] transition hover:bg-[#242820] hover:text-[#d2f58a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b7e35a] focus-visible:ring-offset-2 focus-visible:ring-offset-[#1b1d19]"
             >
               <SiGithub className="h-4 w-4" aria-hidden="true" />
+            </a>
+            <a
+              href={CMC_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="SabiSwap on CoinMarketCap Community (opens in a new tab)"
+              title="CoinMarketCap Community"
+              data-testid="link-footer-social-cmc"
+              className="grid h-11 w-11 place-items-center rounded-2xl bg-[#10110e] text-[#b7e35a] shadow-[0_2px_0_#2c3027] transition hover:bg-[#242820] hover:text-[#d2f58a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b7e35a] focus-visible:ring-offset-2 focus-visible:ring-offset-[#1b1d19]"
+            >
+              <SiCoinmarketcap className="h-5 w-5" aria-hidden="true" />
             </a>
           </div>
         </div>
