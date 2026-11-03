@@ -79,7 +79,7 @@ does not apply a missing schema.
 | Credentials not configured | Server environment contains both required SideShift variables |
 | Recent swaps unavailable | Provider reporting compatibility, account match and refresh errors |
 | Total volume not visible | Intentionally hidden below $1,000; unknown historical USD is not zero |
-| No campaign credit | Dates, $50 minimum, settled status, original browser receipt and manual approval |
+| No campaign credit | Review the participation information in the app and contact SabiSwap privately |
 | Campaign database error | Connection, schema availability and safe database rollout |
 | Admin not configured | Password must be present and at least 16 characters |
 | Order missing after refresh | Browser local storage may have been cleared; contact official support privately |

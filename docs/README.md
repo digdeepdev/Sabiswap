@@ -13,8 +13,8 @@ alongside this guide.
 
 1. [User guide](user-guide.md) — making a swap, choosing networks, following orders,
    understanding market data, and getting help.
-2. [Community campaign](campaign.md) — the 100-day volume campaign, entry rules,
-   manual verification, leaderboard and reward allocations.
+2. [Roadmap](roadmap.md) — short-term app development, community growth and the
+   $100k swap campaign; long-term NFT, token and staking plans.
 3. [Developer guide](development.md) — repository layout, environment variables,
    local development, data model, build steps and tests.
 4. [API reference](api.md) — the browser-to-server contract, integration boundaries

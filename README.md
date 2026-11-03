@@ -24,7 +24,7 @@ Asset availability, regional restrictions, fees and transaction risks still appl
 | --- | --- |
 | [Documentation home](docs/README.md) | Overview and reading paths |
 | [User guide](docs/user-guide.md) | Swaps, networks, tracking, market data and support |
-| [Community campaign](docs/campaign.md) | Eligibility, dates, leaderboard and reward accounting |
+| [Roadmap](docs/roadmap.md) | Short-term development and growth; long-term ecosystem plans |
 | [Developer guide](docs/development.md) | Architecture, configuration, setup and checks |
 | [API reference](docs/api.md) | Application endpoints and provider integration |
 | [Security and operations](docs/security.md) | Visitor IPs, sensitive data, deployment and troubleshooting |

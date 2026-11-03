@@ -87,8 +87,9 @@ This reporting is separate from the manually approved campaign leaderboard.
 ## Claim and rewards
 
 The **Claim** area currently hosts the community campaign. It is not an enabled
-token payout or an on-chain claim transaction. See the [campaign guide](campaign.md)
-before submitting.
+token payout or an on-chain claim transaction. Campaign participation details are
+provided in the app rather than this documentation. For future product plans,
+see the [roadmap](roadmap.md).
 
 ## Get help
 

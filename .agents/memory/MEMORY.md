@@ -4,3 +4,4 @@
 - [Swap campaign](swap-campaign.md) — User requested a 100-day volume campaign, community fee rewards and an order-verified leaderboard.
 - [Affiliate reporting](affiliate-reporting.md) — Homepage activity must be affiliate-only and all-time, not campaign entries or SideShift-wide recent shifts.
 - [Homepage SEO content](homepage-seo.md) — Keep the swap area compact; descriptive content must be crawlable without crawler-only hidden text.
+- [Documentation scope and roadmap](documentation-roadmap.md) — Public docs exclude campaign rules and allocations; preserve the user's short- and long-term priorities.
