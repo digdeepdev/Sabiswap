@@ -52,11 +52,7 @@ export default function Home() {
       
       <div className="z-10 w-full max-w-4xl flex flex-col items-center gap-8">
         <div className="sr-only">
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Cross-chain crypto swaps</h1>
-          <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
-            Swap crypto across blockchains with SabiSwap, powered by SideShift.
-            Choose your assets and networks, review a live quote, and receive crypto in your wallet.
-          </p>
+          <h1>SabiSwap — Cross-chain crypto swaps</h1>
         </div>
         <div id="swap" ref={swapRef} tabIndex={-1} className="w-full flex flex-col items-center scroll-mt-24 outline-none">
         {activeShiftId ? (
@@ -78,6 +74,40 @@ export default function Home() {
         <div id="affiliate" className="w-full mt-4 scroll-mt-24">
           <AffiliateActivity />
         </div>
+
+        <details className="w-full rounded-2xl border border-border bg-card px-5 py-4 text-sm" data-testid="homepage-about">
+          <summary className="cursor-pointer rounded font-semibold text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+            About SabiSwap
+          </summary>
+          <div className="mt-4 space-y-4 leading-relaxed text-muted-foreground">
+            <h2 className="text-base font-semibold text-foreground">Multi-chain crypto swaps powered by SideShift</h2>
+            <p>
+              SabiSwap is a multi-chain cryptocurrency exchange interface powered by SideShift.
+              Swap crypto across blockchains, compare live quotes, and receive your chosen asset
+              directly in your wallet without creating a SabiSwap account.
+            </p>
+            <p>
+              Explore assets on networks including Bitcoin, Ethereum, Solana, Arbitrum, Base,
+              BNB Smart Chain, Polygon, Avalanche, Optimism, Sui, TON and TRON.
+              Available assets, networks and swap limits depend on SideShift and can change;
+              check the live asset selector before sending funds.
+            </p>
+            <h2 className="text-base font-semibold text-foreground">How to swap crypto across blockchains</h2>
+            <p>
+              Choose the asset and network you want to send and receive, enter an amount,
+              review the quote, and provide a destination wallet address on the receiving network.
+              After confirming the swap, send funds to the deposit address shown and track
+              the order status. SideShift processes the exchange; network fees, timing and
+              regional restrictions may apply.
+            </p>
+            <p>
+              Read the <a href={`${import.meta.env.BASE_URL}faq`} className="underline underline-offset-4">crypto swap FAQ</a>{' '}
+              for network, fee and order-tracking guidance, or visit{' '}
+              <a href={`${import.meta.env.BASE_URL}help`} className="underline underline-offset-4">swap support</a>{' '}
+              if you need help.
+            </p>
+          </div>
+        </details>
       </div>
     </main>
     <Footer onSwap={() => goTo(swapRef.current)} />

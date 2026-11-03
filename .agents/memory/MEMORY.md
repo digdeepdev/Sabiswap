@@ -3,3 +3,4 @@
 - [Pair-link preference](pair-link-preference.md) — User approved clean /<from>/<to> swap links modeled on SideShift.
 - [Swap campaign](swap-campaign.md) — User requested a 100-day volume campaign, community fee rewards and an order-verified leaderboard.
 - [Affiliate reporting](affiliate-reporting.md) — Homepage activity must be affiliate-only and all-time, not campaign entries or SideShift-wide recent shifts.
+- [Homepage SEO content](homepage-seo.md) — Keep the swap area compact; descriptive content must be crawlable without crawler-only hidden text.

@@ -20,6 +20,18 @@ for (const route of routes) {
   assert.equal(JSON.parse(schema)['@context'], 'https://schema.org', `Valid schema: ${route}`);
   assert(!head.includes('.replit.dev'), `No development URLs: ${route}`);
   assert(head.includes(['/terms', '/campaign-admin'].includes(route) ? 'noindex, follow' : 'index, follow'), `Robots: ${route}`);
+  if (route === '/') {
+    const about = html.match(/<details\b[^>]*data-testid="homepage-about"[^>]*>([\s\S]*?)<\/details>/);
+    assert(about, 'Homepage description exists in initial HTML without JavaScript');
+    assert(!about[0].match(/<details\b[^>]*\bopen(?:[=\s>])/), 'Homepage description collapsed by default');
+    assert(about[1].includes('<summary') && about[1].includes('About SabiSwap'), 'Description can be expanded by visitors');
+    assert(about[1].includes('Swap crypto across blockchains'), 'Homepage description is crawlable HTML');
+    assert(about[1].includes('Bitcoin, Ethereum, Solana'), 'Network context is pre-rendered');
+    assert(!about[0].includes('sr-only') && !about[0].includes('aria-hidden'), 'Description is not crawler-only text');
+    const graph = JSON.parse(schema)['@graph'];
+    const organization = graph.find((entry) => entry['@type'] === 'Organization');
+    assert(organization.sameAs.includes('https://coinmarketcap.com/community/profile/SabiSwap'), 'Official social profiles included in structured data');
+  }
   if (route === '/faq') {
     assert.equal((html.match(/<details[\s>]/g) ?? []).length, 10, 'All FAQ entries pre-rendered');
     assert(html.includes('including the memo if one is displayed'), 'FAQ answer readable without JS');

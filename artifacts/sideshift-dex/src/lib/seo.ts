@@ -3,7 +3,7 @@ import { pairPath } from './swap-pair';
 // Verified published primary URL; never use a workspace preview URL here.
 export const SITE_URL = 'https://sabiswap.io';
 export const SEO_PAGES = [
-  { path: '/', title: 'SabiSwap — Cross-Chain Crypto Swaps Powered by SideShift', description: 'Swap crypto across blockchains with SabiSwap, powered by SideShift. Compare live quotes, choose your networks and receive crypto directly in your wallet.', index: true },
+  { path: '/', title: 'SabiSwap — Cross-Chain Crypto Swaps Powered by SideShift', description: 'Swap Bitcoin, Ethereum, Solana and more across blockchains with SabiSwap, powered by SideShift. Compare live quotes and receive crypto directly in your wallet.', index: true },
   { path: '/faq', title: 'Crypto Swap FAQ: Networks, Fees & Order Tracking | SabiSwap', description: 'Learn how SabiSwap crypto swaps work. Find answers about networks, destination addresses, fixed quotes, fees, order tracking and upcoming token claims.', index: true },
   { path: '/help', title: 'Crypto Swap Help & Troubleshooting | SabiSwap Support', description: 'Get help with SabiSwap quotes, delayed transfers, wrong networks and expired orders. Find official SideShift support and learn how to protect your order ID.', index: true },
   { path: '/brand-assets', title: 'SabiSwap Brand Assets — App Icons, Favicons & Colors', description: 'Download SabiSwap app icons, PNG and ICO favicons, and the Apple touch icon. Explore the lime and charcoal brand palette and guidelines for using the logo.', index: true },
@@ -39,8 +39,17 @@ export function renderSeoHead(path: string, pairShell = false) {
   const url = `${SITE_URL}${page.path}`;
   const image = `${SITE_URL}/social-preview.png`;
   const graph: Record<string, unknown>[] = [{
+    '@type': 'Organization', '@id': `${SITE_URL}/#organization`,
+    name: 'SabiSwap', url: `${SITE_URL}/`, logo: `${SITE_URL}/app-icon.png`,
+    sameAs: [
+      'https://x.com/sabiswap',
+      'https://github.com/digdeepdev/Sabiswap',
+      'https://coinmarketcap.com/community/profile/SabiSwap',
+    ],
+  }, {
     '@type': 'WebSite', '@id': `${SITE_URL}/#website`, name: 'SabiSwap', url: `${SITE_URL}/`,
     description: SEO_PAGES[0].description, inLanguage: 'en',
+    publisher: { '@id': `${SITE_URL}/#organization` },
   }, {
     '@type': 'WebPage', '@id': `${url}#webpage`, url, name: page.title, description: page.description,
     isPartOf: { '@id': `${SITE_URL}/#website` }, inLanguage: 'en',
